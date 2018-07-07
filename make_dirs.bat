@@ -8,6 +8,8 @@
 @mkdir "%TOP%dependencies\macOS\lib"
 @mkdir "%TOP%dependencies\Win32\lib"
 @mkdir "%TOP%dependencies\x64\lib"
+@mkdir "%TOP%dependencies\Win32\lib_d"
+@mkdir "%TOP%dependencies\x64\lib_d"
 @mkdir "%TOP%dependencies\linux\include"
 @mkdir "%TOP%dependencies\macOS\include"
 @mkdir "%TOP%dependencies\Win32\include"
