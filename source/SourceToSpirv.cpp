@@ -8,19 +8,16 @@
 #define ENABLE_HLSL
 #define NV_EXTENSIONS
 #define AMD_EXTENSIONS
+#include "SourceToSpirv.h"
+#include <string>
+#include <vector>
+#include <memory>
 #include <SPIRV/doc.h>
 #include <SPIRV/disassemble.h>
 #include <SPIRV/SPVRemapper.h>
 #include <SPIRV/GlslangToSpv.h>
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/MachineIndependent/ParseHelper.h>
-#include "Square/Config.h"
-#include "Square/Render/ShaderUtils/SourceToSpirv.h"
-#include "Square/Core/SmartPointers.h"
-#include "Square/Driver/Render.h"
-#include <string>
-#include <vector>
-
 namespace glslang
 {
 static const TBuiltInResource DefaultTBuiltInResource =
@@ -109,33 +106,33 @@ static const TBuiltInResource DefaultTBuiltInResource =
     /* .MaxCombinedClipAndCullDistances = */ 8,
     /* .MaxSamples = */ 4,
     /* .limits = */ {
-        /* .nonInductiveForLoops = */ 1,
-        /* .whileLoops = */ 1,
-        /* .doWhileLoops = */ 1,
-        /* .generalUniformIndexing = */ 1,
-        /* .generalAttributeMatrixVectorIndexing = */ 1,
-        /* .generalVaryingIndexing = */ 1,
-        /* .generalSamplerIndexing = */ 1,
-        /* .generalVariableIndexing = */ 1,
-        /* .generalConstantMatrixVectorIndexing = */ 1,
+    /* .nonInductiveForLoops = */ 1,
+    /* .whileLoops = */ 1,
+    /* .doWhileLoops = */ 1,
+    /* .generalUniformIndexing = */ 1,
+    /* .generalAttributeMatrixVectorIndexing = */ 1,
+    /* .generalVaryingIndexing = */ 1,
+    /* .generalSamplerIndexing = */ 1,
+    /* .generalVariableIndexing = */ 1,
+    /* .generalConstantMatrixVectorIndexing = */ 1,
     }
 };
 }
 
 namespace Square
 {
-static EShLanguage render_shader_type_to_glslang_type(Square::Render::ShaderType type)
+static EShLanguage render_shader_type_to_glslang_type(ShaderType type)
 {
     switch (type)
     {
-        case Square::Render::ST_VERTEX_SHADER: return EShLangVertex;
-        case Square::Render::ST_FRAGMENT_SHADER: return EShLangFragment;
-        case Square::Render::ST_GEOMETRY_SHADER: return EShLangGeometry;
-        case Square::Render::ST_TASSELLATION_CONTROL_SHADER: return EShLangTessControl;
-        case Square::Render::ST_TASSELLATION_EVALUATION_SHADER: return EShLangTessEvaluation;
-        case Square::Render::ST_COMPUTE_SHADER: return EShLangCompute;
+        case ST_VERTEX_SHADER: return EShLangVertex;
+        case ST_FRAGMENT_SHADER: return EShLangFragment;
+        case ST_GEOMETRY_SHADER: return EShLangGeometry;
+        case ST_TASSELLATION_CONTROL_SHADER: return EShLangTessControl;
+        case ST_TASSELLATION_EVALUATION_SHADER: return EShLangTessEvaluation;
+        case ST_COMPUTE_SHADER: return EShLangCompute;
         //default
-        case Square::Render::ST_N_SHADER: default: return EShLangCount;
+        case ST_N_SHADER: default: return EShLangCount;
     }
 }
 
@@ -218,21 +215,33 @@ extern bool hlsl_to_spirv
     //shaders
     TProgram program;
 	std::vector< int > types;
-	std::vector< Shared<TShader> > shaders;
+    std::vector< std::shared_ptr<TShader> > shaders;
 	EShMessages messages =  EShMessages(flags_messages);
+    //source_ptrs
+    std::vector<const char*> sources;
+    //source_ptrs
+    std::vector<const char*> filenames;
+    //source lens
+    std::vector< int > lengths;
+    //ptr of fake file
+    const char* inv_mul_str = "#define mul(x,y) mul(y,x)\n";
+    const char* inv_mul_name = "inv_mul.hlsl";
     //source
-    const char* source_hlsl   = hlsl_source.c_str();
-    const char* sources[]     = { source_hlsl };
-    const int   length_hlsl   = (int)hlsl_source.size();
-    const int   lengths[]     = { length_hlsl };
-    const char* filename_hlsl = hlsl_filename.c_str();
-    const char* filenames[]   = { filename_hlsl };
+    if(target_info.m_reverse_mul)
+    {
+        sources.push_back(inv_mul_str);
+        filenames.push_back(inv_mul_name);
+        lengths.push_back((int)std::strlen(inv_mul_str));
+    }
+    sources.push_back(hlsl_source.c_str());
+    filenames.push_back( hlsl_filename.c_str());
+    lengths.push_back((int)hlsl_source.size());
     //configure
 	for (auto shader_info : shaders_info)
 	{
 		auto shader_type = render_shader_type_to_glslang_type(shader_info.m_type);
 		auto shader = std::make_shared<TShader>(shader_type);
-		shader->setStringsWithLengthsAndNames(sources, lengths, filenames, 1);
+		shader->setStringsWithLengthsAndNames(sources.data(), lengths.data(), filenames.data(), (int)sources.size());
 		shader->setEntryPoint(shader_info.m_name.c_str());		
 		//by target selected
 		shader->setEnvInput(EShSourceHlsl, shader_type, client, clent_semantic_version);
@@ -288,7 +297,7 @@ extern bool hlsl_to_spirv
     for(size_t i = 0; i!= shaders_output.size(); ++i)
     {
         //get type
-        auto shader_type = render_shader_type_to_glslang_type((Render::ShaderType)types[i]);
+        auto shader_type = render_shader_type_to_glslang_type((ShaderType)types[i]);
         //get spv
         {
             //errors
@@ -302,7 +311,7 @@ extern bool hlsl_to_spirv
 			//get output
 			GlslangToSpv(*program.getIntermediate(shader_type), output, &logger, &spv_options);
 			//spv::SpirvToolsDisassemble(std::cout, output);
-			spv::Disassemble(std::cout, output);
+			//spv::Disassemble(std::cout, output);
 			//build
 			std::get<0>(shaders_output[i]) = types[i];
 			std::get<1>(shaders_output[i]) = std::move(output);

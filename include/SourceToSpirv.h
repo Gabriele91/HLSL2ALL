@@ -6,16 +6,28 @@
 //  Copyright © 2018 Gabriele Di Bari. All rights reserved.
 //
 #pragma once
-#include "Square/Config.h"
-#include "Square/Driver/Render.h"
+#include <vector>
+#include <string>
+#include <tuple>
 
 namespace Square
 {
+    //type of shader
+    enum ShaderType
+    {
+        ST_VERTEX_SHADER,
+        ST_FRAGMENT_SHADER,
+        ST_GEOMETRY_SHADER,
+        ST_TASSELLATION_CONTROL_SHADER,
+        ST_TASSELLATION_EVALUATION_SHADER,
+        ST_COMPUTE_SHADER,
+        ST_N_SHADER
+    };
     //Shader Info
     struct ShaderInfo
     {
-        Square::Render::ShaderType m_type;
-        std::string                m_name;
+        ShaderType  m_type;
+        std::string m_name;
     };
     //Spirv
     using SpirvShader  = std::vector<unsigned int>;
@@ -33,9 +45,10 @@ namespace Square
 		int   m_client_version{450};
 		bool  m_vulkan{ false };
 		bool  m_desktop{ true };
+        bool  m_reverse_mul{ false };
 	};
     //convert
-	SQUARE_API bool hlsl_to_spirv
+    bool hlsl_to_spirv
     (
       const std::string&              hlsl_source
     , const std::string&              hlsl_filename

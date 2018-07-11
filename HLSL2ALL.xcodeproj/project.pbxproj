@@ -1,0 +1,649 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E0C1063D20F63D8F008310C9 /* SourceToSpirv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0C105DC20F63D8F008310C9 /* SourceToSpirv.cpp */; };
+		E0C1063E20F63D8F008310C9 /* SpirvToSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0C105DD20F63D8F008310C9 /* SpirvToSource.cpp */; };
+		E0C1063F20F63D8F008310C9 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062820F63D8F008310C9 /* libglslang.a */; };
+		E0C1064020F63D8F008310C9 /* libHLSL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062920F63D8F008310C9 /* libHLSL.a */; };
+		E0C1064120F63D8F008310C9 /* libOGLCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062A20F63D8F008310C9 /* libOGLCompiler.a */; };
+		E0C1064220F63D8F008310C9 /* libOSDependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062B20F63D8F008310C9 /* libOSDependent.a */; };
+		E0C1064320F63D8F008310C9 /* libspirv-cross-core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062C20F63D8F008310C9 /* libspirv-cross-core.a */; };
+		E0C1064420F63D8F008310C9 /* libspirv-cross-cpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062D20F63D8F008310C9 /* libspirv-cross-cpp.a */; };
+		E0C1064520F63D8F008310C9 /* libspirv-cross-glsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062E20F63D8F008310C9 /* libspirv-cross-glsl.a */; };
+		E0C1064620F63D8F008310C9 /* libspirv-cross-hlsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1062F20F63D8F008310C9 /* libspirv-cross-hlsl.a */; };
+		E0C1064720F63D8F008310C9 /* libspirv-cross-msl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1063020F63D8F008310C9 /* libspirv-cross-msl.a */; };
+		E0C1064820F63D8F008310C9 /* libspirv-cross-reflect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1063120F63D8F008310C9 /* libspirv-cross-reflect.a */; };
+		E0C1064920F63D8F008310C9 /* libspirv-cross-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1063220F63D8F008310C9 /* libspirv-cross-util.a */; };
+		E0C1064A20F63D8F008310C9 /* libSPIRV.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1063320F63D8F008310C9 /* libSPIRV.a */; };
+		E0C1064B20F63D8F008310C9 /* libSPVRemapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0C1063420F63D8F008310C9 /* libSPVRemapper.a */; };
+		E0C1064C20F63D8F008310C9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0C1063C20F63D8F008310C9 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E0C1055420F63AC5008310C9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		E0C1055620F63AC5008310C9 /* HLSL2ALL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HLSL2ALL; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0C105DC20F63D8F008310C9 /* SourceToSpirv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SourceToSpirv.cpp; sourceTree = "<group>"; };
+		E0C105DD20F63D8F008310C9 /* SpirvToSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpirvToSource.cpp; sourceTree = "<group>"; };
+		E0C105DF20F63D8F008310C9 /* SourceToSpirv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SourceToSpirv.h; sourceTree = "<group>"; };
+		E0C105E020F63D8F008310C9 /* SpirvToSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpirvToSource.h; sourceTree = "<group>"; };
+		E0C105E920F63D8F008310C9 /* arrays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arrays.h; sourceTree = "<group>"; };
+		E0C105EA20F63D8F008310C9 /* BaseTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTypes.h; sourceTree = "<group>"; };
+		E0C105EB20F63D8F008310C9 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		E0C105EC20F63D8F008310C9 /* ConstantUnion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantUnion.h; sourceTree = "<group>"; };
+		E0C105ED20F63D8F008310C9 /* InfoSink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSink.h; sourceTree = "<group>"; };
+		E0C105EE20F63D8F008310C9 /* InitializeGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InitializeGlobals.h; sourceTree = "<group>"; };
+		E0C105EF20F63D8F008310C9 /* intermediate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = intermediate.h; sourceTree = "<group>"; };
+		E0C105F020F63D8F008310C9 /* PoolAlloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PoolAlloc.h; sourceTree = "<group>"; };
+		E0C105F120F63D8F008310C9 /* ResourceLimits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceLimits.h; sourceTree = "<group>"; };
+		E0C105F220F63D8F008310C9 /* revision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = revision.h; sourceTree = "<group>"; };
+		E0C105F320F63D8F008310C9 /* ShHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShHandle.h; sourceTree = "<group>"; };
+		E0C105F420F63D8F008310C9 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		E0C105F620F63D8F008310C9 /* attribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attribute.h; sourceTree = "<group>"; };
+		E0C105F720F63D8F008310C9 /* gl_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl_types.h; sourceTree = "<group>"; };
+		E0C105F820F63D8F008310C9 /* glslang_tab.cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glslang_tab.cpp.h; sourceTree = "<group>"; };
+		E0C105F920F63D8F008310C9 /* Initialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Initialize.h; sourceTree = "<group>"; };
+		E0C105FA20F63D8F008310C9 /* iomapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iomapper.h; sourceTree = "<group>"; };
+		E0C105FB20F63D8F008310C9 /* LiveTraverser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveTraverser.h; sourceTree = "<group>"; };
+		E0C105FC20F63D8F008310C9 /* localintermediate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = localintermediate.h; sourceTree = "<group>"; };
+		E0C105FD20F63D8F008310C9 /* ParseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseHelper.h; sourceTree = "<group>"; };
+		E0C105FE20F63D8F008310C9 /* parseVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parseVersions.h; sourceTree = "<group>"; };
+		E0C1060020F63D8F008310C9 /* PpContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PpContext.h; sourceTree = "<group>"; };
+		E0C1060120F63D8F008310C9 /* PpTokens.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PpTokens.h; sourceTree = "<group>"; };
+		E0C1060220F63D8F008310C9 /* propagateNoContraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = propagateNoContraction.h; sourceTree = "<group>"; };
+		E0C1060320F63D8F008310C9 /* reflection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reflection.h; sourceTree = "<group>"; };
+		E0C1060420F63D8F008310C9 /* RemoveTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoveTree.h; sourceTree = "<group>"; };
+		E0C1060520F63D8F008310C9 /* Scan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scan.h; sourceTree = "<group>"; };
+		E0C1060620F63D8F008310C9 /* ScanContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanContext.h; sourceTree = "<group>"; };
+		E0C1060720F63D8F008310C9 /* SymbolTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
+		E0C1060820F63D8F008310C9 /* Versions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Versions.h; sourceTree = "<group>"; };
+		E0C1060A20F63D8F008310C9 /* ShaderLang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderLang.h; sourceTree = "<group>"; };
+		E0C1060C20F63D8F008310C9 /* bitutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitutils.h; sourceTree = "<group>"; };
+		E0C1060D20F63D8F008310C9 /* disassemble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disassemble.h; sourceTree = "<group>"; };
+		E0C1060E20F63D8F008310C9 /* doc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doc.h; sourceTree = "<group>"; };
+		E0C1060F20F63D8F008310C9 /* GLSL.ext.AMD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSL.ext.AMD.h; sourceTree = "<group>"; };
+		E0C1061020F63D8F008310C9 /* GLSL.ext.EXT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSL.ext.EXT.h; sourceTree = "<group>"; };
+		E0C1061120F63D8F008310C9 /* GLSL.ext.KHR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSL.ext.KHR.h; sourceTree = "<group>"; };
+		E0C1061220F63D8F008310C9 /* GLSL.ext.NV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSL.ext.NV.h; sourceTree = "<group>"; };
+		E0C1061320F63D8F008310C9 /* GLSL.std.450.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSL.std.450.h; sourceTree = "<group>"; };
+		E0C1061420F63D8F008310C9 /* GlslangToSpv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlslangToSpv.h; sourceTree = "<group>"; };
+		E0C1061520F63D8F008310C9 /* hex_float.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex_float.h; sourceTree = "<group>"; };
+		E0C1061620F63D8F008310C9 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		E0C1061720F63D8F008310C9 /* spirv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv.hpp; sourceTree = "<group>"; };
+		E0C1061820F63D8F008310C9 /* SpvBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpvBuilder.h; sourceTree = "<group>"; };
+		E0C1061920F63D8F008310C9 /* spvIR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spvIR.h; sourceTree = "<group>"; };
+		E0C1061A20F63D8F008310C9 /* SPVRemapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPVRemapper.h; sourceTree = "<group>"; };
+		E0C1061C20F63D8F008310C9 /* GLSL.std.450.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSL.std.450.h; sourceTree = "<group>"; };
+		E0C1061D20F63D8F008310C9 /* spirv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv.hpp; sourceTree = "<group>"; };
+		E0C1061E20F63D8F008310C9 /* spirv_cfg.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_cfg.hpp; sourceTree = "<group>"; };
+		E0C1061F20F63D8F008310C9 /* spirv_common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_common.hpp; sourceTree = "<group>"; };
+		E0C1062020F63D8F008310C9 /* spirv_cpp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_cpp.hpp; sourceTree = "<group>"; };
+		E0C1062120F63D8F008310C9 /* spirv_cross.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_cross.hpp; sourceTree = "<group>"; };
+		E0C1062220F63D8F008310C9 /* spirv_cross_util.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_cross_util.hpp; sourceTree = "<group>"; };
+		E0C1062320F63D8F008310C9 /* spirv_glsl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_glsl.hpp; sourceTree = "<group>"; };
+		E0C1062420F63D8F008310C9 /* spirv_hlsl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_hlsl.hpp; sourceTree = "<group>"; };
+		E0C1062520F63D8F008310C9 /* spirv_msl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_msl.hpp; sourceTree = "<group>"; };
+		E0C1062620F63D8F008310C9 /* spirv_reflect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = spirv_reflect.hpp; sourceTree = "<group>"; };
+		E0C1062820F63D8F008310C9 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglslang.a; sourceTree = "<group>"; };
+		E0C1062920F63D8F008310C9 /* libHLSL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libHLSL.a; sourceTree = "<group>"; };
+		E0C1062A20F63D8F008310C9 /* libOGLCompiler.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOGLCompiler.a; sourceTree = "<group>"; };
+		E0C1062B20F63D8F008310C9 /* libOSDependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOSDependent.a; sourceTree = "<group>"; };
+		E0C1062C20F63D8F008310C9 /* libspirv-cross-core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-core.a"; sourceTree = "<group>"; };
+		E0C1062D20F63D8F008310C9 /* libspirv-cross-cpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-cpp.a"; sourceTree = "<group>"; };
+		E0C1062E20F63D8F008310C9 /* libspirv-cross-glsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-glsl.a"; sourceTree = "<group>"; };
+		E0C1062F20F63D8F008310C9 /* libspirv-cross-hlsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-hlsl.a"; sourceTree = "<group>"; };
+		E0C1063020F63D8F008310C9 /* libspirv-cross-msl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-msl.a"; sourceTree = "<group>"; };
+		E0C1063120F63D8F008310C9 /* libspirv-cross-reflect.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-reflect.a"; sourceTree = "<group>"; };
+		E0C1063220F63D8F008310C9 /* libspirv-cross-util.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-cross-util.a"; sourceTree = "<group>"; };
+		E0C1063320F63D8F008310C9 /* libSPIRV.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSPIRV.a; sourceTree = "<group>"; };
+		E0C1063420F63D8F008310C9 /* libSPVRemapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSPVRemapper.a; sourceTree = "<group>"; };
+		E0C1063C20F63D8F008310C9 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E0C1055320F63AC5008310C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0C1064A20F63D8F008310C9 /* libSPIRV.a in Frameworks */,
+				E0C1064020F63D8F008310C9 /* libHLSL.a in Frameworks */,
+				E0C1064B20F63D8F008310C9 /* libSPVRemapper.a in Frameworks */,
+				E0C1063F20F63D8F008310C9 /* libglslang.a in Frameworks */,
+				E0C1064120F63D8F008310C9 /* libOGLCompiler.a in Frameworks */,
+				E0C1064420F63D8F008310C9 /* libspirv-cross-cpp.a in Frameworks */,
+				E0C1064720F63D8F008310C9 /* libspirv-cross-msl.a in Frameworks */,
+				E0C1064820F63D8F008310C9 /* libspirv-cross-reflect.a in Frameworks */,
+				E0C1064920F63D8F008310C9 /* libspirv-cross-util.a in Frameworks */,
+				E0C1064520F63D8F008310C9 /* libspirv-cross-glsl.a in Frameworks */,
+				E0C1064320F63D8F008310C9 /* libspirv-cross-core.a in Frameworks */,
+				E0C1064620F63D8F008310C9 /* libspirv-cross-hlsl.a in Frameworks */,
+				E0C1064220F63D8F008310C9 /* libOSDependent.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E0C1054D20F63AC5008310C9 = {
+			isa = PBXGroup;
+			children = (
+				E0C105E120F63D8F008310C9 /* dependencies */,
+				E0C105DE20F63D8F008310C9 /* include */,
+				E0C105DB20F63D8F008310C9 /* source */,
+				E0C1063B20F63D8F008310C9 /* tests */,
+				E0C1055720F63AC5008310C9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E0C1055720F63AC5008310C9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1055620F63AC5008310C9 /* HLSL2ALL */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E0C105DB20F63D8F008310C9 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105DC20F63D8F008310C9 /* SourceToSpirv.cpp */,
+				E0C105DD20F63D8F008310C9 /* SpirvToSource.cpp */,
+			);
+			path = source;
+			sourceTree = "<group>";
+		};
+		E0C105DE20F63D8F008310C9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105DF20F63D8F008310C9 /* SourceToSpirv.h */,
+				E0C105E020F63D8F008310C9 /* SpirvToSource.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E0C105E120F63D8F008310C9 /* dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105E220F63D8F008310C9 /* linux */,
+				E0C105E520F63D8F008310C9 /* macOS */,
+				E0C1063520F63D8F008310C9 /* Win32 */,
+				E0C1063820F63D8F008310C9 /* x64 */,
+			);
+			path = dependencies;
+			sourceTree = "<group>";
+		};
+		E0C105E220F63D8F008310C9 /* linux */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105E320F63D8F008310C9 /* include */,
+				E0C105E420F63D8F008310C9 /* lib */,
+			);
+			path = linux;
+			sourceTree = "<group>";
+		};
+		E0C105E320F63D8F008310C9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E0C105E420F63D8F008310C9 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E0C105E520F63D8F008310C9 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105E620F63D8F008310C9 /* include */,
+				E0C1062720F63D8F008310C9 /* lib */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		E0C105E620F63D8F008310C9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105E720F63D8F008310C9 /* glslang */,
+				E0C1060B20F63D8F008310C9 /* SPIRV */,
+				E0C1061B20F63D8F008310C9 /* spirv_cross */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E0C105E720F63D8F008310C9 /* glslang */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105E820F63D8F008310C9 /* Include */,
+				E0C105F520F63D8F008310C9 /* MachineIndependent */,
+				E0C1060920F63D8F008310C9 /* Public */,
+			);
+			path = glslang;
+			sourceTree = "<group>";
+		};
+		E0C105E820F63D8F008310C9 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105E920F63D8F008310C9 /* arrays.h */,
+				E0C105EA20F63D8F008310C9 /* BaseTypes.h */,
+				E0C105EB20F63D8F008310C9 /* Common.h */,
+				E0C105EC20F63D8F008310C9 /* ConstantUnion.h */,
+				E0C105ED20F63D8F008310C9 /* InfoSink.h */,
+				E0C105EE20F63D8F008310C9 /* InitializeGlobals.h */,
+				E0C105EF20F63D8F008310C9 /* intermediate.h */,
+				E0C105F020F63D8F008310C9 /* PoolAlloc.h */,
+				E0C105F120F63D8F008310C9 /* ResourceLimits.h */,
+				E0C105F220F63D8F008310C9 /* revision.h */,
+				E0C105F320F63D8F008310C9 /* ShHandle.h */,
+				E0C105F420F63D8F008310C9 /* Types.h */,
+			);
+			path = Include;
+			sourceTree = "<group>";
+		};
+		E0C105F520F63D8F008310C9 /* MachineIndependent */ = {
+			isa = PBXGroup;
+			children = (
+				E0C105F620F63D8F008310C9 /* attribute.h */,
+				E0C105F720F63D8F008310C9 /* gl_types.h */,
+				E0C105F820F63D8F008310C9 /* glslang_tab.cpp.h */,
+				E0C105F920F63D8F008310C9 /* Initialize.h */,
+				E0C105FA20F63D8F008310C9 /* iomapper.h */,
+				E0C105FB20F63D8F008310C9 /* LiveTraverser.h */,
+				E0C105FC20F63D8F008310C9 /* localintermediate.h */,
+				E0C105FD20F63D8F008310C9 /* ParseHelper.h */,
+				E0C105FE20F63D8F008310C9 /* parseVersions.h */,
+				E0C105FF20F63D8F008310C9 /* preprocessor */,
+				E0C1060220F63D8F008310C9 /* propagateNoContraction.h */,
+				E0C1060320F63D8F008310C9 /* reflection.h */,
+				E0C1060420F63D8F008310C9 /* RemoveTree.h */,
+				E0C1060520F63D8F008310C9 /* Scan.h */,
+				E0C1060620F63D8F008310C9 /* ScanContext.h */,
+				E0C1060720F63D8F008310C9 /* SymbolTable.h */,
+				E0C1060820F63D8F008310C9 /* Versions.h */,
+			);
+			path = MachineIndependent;
+			sourceTree = "<group>";
+		};
+		E0C105FF20F63D8F008310C9 /* preprocessor */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1060020F63D8F008310C9 /* PpContext.h */,
+				E0C1060120F63D8F008310C9 /* PpTokens.h */,
+			);
+			path = preprocessor;
+			sourceTree = "<group>";
+		};
+		E0C1060920F63D8F008310C9 /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1060A20F63D8F008310C9 /* ShaderLang.h */,
+			);
+			path = Public;
+			sourceTree = "<group>";
+		};
+		E0C1060B20F63D8F008310C9 /* SPIRV */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1060C20F63D8F008310C9 /* bitutils.h */,
+				E0C1060D20F63D8F008310C9 /* disassemble.h */,
+				E0C1060E20F63D8F008310C9 /* doc.h */,
+				E0C1060F20F63D8F008310C9 /* GLSL.ext.AMD.h */,
+				E0C1061020F63D8F008310C9 /* GLSL.ext.EXT.h */,
+				E0C1061120F63D8F008310C9 /* GLSL.ext.KHR.h */,
+				E0C1061220F63D8F008310C9 /* GLSL.ext.NV.h */,
+				E0C1061320F63D8F008310C9 /* GLSL.std.450.h */,
+				E0C1061420F63D8F008310C9 /* GlslangToSpv.h */,
+				E0C1061520F63D8F008310C9 /* hex_float.h */,
+				E0C1061620F63D8F008310C9 /* Logger.h */,
+				E0C1061720F63D8F008310C9 /* spirv.hpp */,
+				E0C1061820F63D8F008310C9 /* SpvBuilder.h */,
+				E0C1061920F63D8F008310C9 /* spvIR.h */,
+				E0C1061A20F63D8F008310C9 /* SPVRemapper.h */,
+			);
+			path = SPIRV;
+			sourceTree = "<group>";
+		};
+		E0C1061B20F63D8F008310C9 /* spirv_cross */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1061C20F63D8F008310C9 /* GLSL.std.450.h */,
+				E0C1061D20F63D8F008310C9 /* spirv.hpp */,
+				E0C1061E20F63D8F008310C9 /* spirv_cfg.hpp */,
+				E0C1061F20F63D8F008310C9 /* spirv_common.hpp */,
+				E0C1062020F63D8F008310C9 /* spirv_cpp.hpp */,
+				E0C1062120F63D8F008310C9 /* spirv_cross.hpp */,
+				E0C1062220F63D8F008310C9 /* spirv_cross_util.hpp */,
+				E0C1062320F63D8F008310C9 /* spirv_glsl.hpp */,
+				E0C1062420F63D8F008310C9 /* spirv_hlsl.hpp */,
+				E0C1062520F63D8F008310C9 /* spirv_msl.hpp */,
+				E0C1062620F63D8F008310C9 /* spirv_reflect.hpp */,
+			);
+			path = spirv_cross;
+			sourceTree = "<group>";
+		};
+		E0C1062720F63D8F008310C9 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1062820F63D8F008310C9 /* libglslang.a */,
+				E0C1062920F63D8F008310C9 /* libHLSL.a */,
+				E0C1062A20F63D8F008310C9 /* libOGLCompiler.a */,
+				E0C1062B20F63D8F008310C9 /* libOSDependent.a */,
+				E0C1062C20F63D8F008310C9 /* libspirv-cross-core.a */,
+				E0C1062D20F63D8F008310C9 /* libspirv-cross-cpp.a */,
+				E0C1062E20F63D8F008310C9 /* libspirv-cross-glsl.a */,
+				E0C1062F20F63D8F008310C9 /* libspirv-cross-hlsl.a */,
+				E0C1063020F63D8F008310C9 /* libspirv-cross-msl.a */,
+				E0C1063120F63D8F008310C9 /* libspirv-cross-reflect.a */,
+				E0C1063220F63D8F008310C9 /* libspirv-cross-util.a */,
+				E0C1063320F63D8F008310C9 /* libSPIRV.a */,
+				E0C1063420F63D8F008310C9 /* libSPVRemapper.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E0C1063520F63D8F008310C9 /* Win32 */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1063620F63D8F008310C9 /* include */,
+				E0C1063720F63D8F008310C9 /* lib */,
+			);
+			path = Win32;
+			sourceTree = "<group>";
+		};
+		E0C1063620F63D8F008310C9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E0C1063720F63D8F008310C9 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E0C1063820F63D8F008310C9 /* x64 */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1063920F63D8F008310C9 /* include */,
+				E0C1063A20F63D8F008310C9 /* lib */,
+			);
+			path = x64;
+			sourceTree = "<group>";
+		};
+		E0C1063920F63D8F008310C9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E0C1063A20F63D8F008310C9 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E0C1063B20F63D8F008310C9 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1063C20F63D8F008310C9 /* main.cpp */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E0C1055520F63AC5008310C9 /* HLSL2ALL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0C1055D20F63AC6008310C9 /* Build configuration list for PBXNativeTarget "HLSL2ALL" */;
+			buildPhases = (
+				E0C1055220F63AC5008310C9 /* Sources */,
+				E0C1055320F63AC5008310C9 /* Frameworks */,
+				E0C1055420F63AC5008310C9 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HLSL2ALL;
+			productName = HLSL2ALL;
+			productReference = E0C1055620F63AC5008310C9 /* HLSL2ALL */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E0C1054E20F63AC5008310C9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = "University of Perugia";
+				TargetAttributes = {
+					E0C1055520F63AC5008310C9 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+				};
+			};
+			buildConfigurationList = E0C1055120F63AC5008310C9 /* Build configuration list for PBXProject "HLSL2ALL" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E0C1054D20F63AC5008310C9;
+			productRefGroup = E0C1055720F63AC5008310C9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E0C1055520F63AC5008310C9 /* HLSL2ALL */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E0C1055220F63AC5008310C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0C1063E20F63D8F008310C9 /* SpirvToSource.cpp in Sources */,
+				E0C1063D20F63D8F008310C9 /* SourceToSpirv.cpp in Sources */,
+				E0C1064C20F63D8F008310C9 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E0C1055B20F63AC6008310C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/dependencies/macOS/include",
+					"$(SRCROOT)/dependencies/macOS/include",
+					"$(SRCROOT)/include",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E0C1055C20F63AC6008310C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/dependencies/macOS/include",
+					"$(SRCROOT)/dependencies/macOS/include",
+					"$(SRCROOT)/include",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E0C1055E20F63AC6008310C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/dependencies/macOS/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E0C1055F20F63AC6008310C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/dependencies/macOS/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E0C1055120F63AC5008310C9 /* Build configuration list for PBXProject "HLSL2ALL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0C1055B20F63AC6008310C9 /* Debug */,
+				E0C1055C20F63AC6008310C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E0C1055D20F63AC6008310C9 /* Build configuration list for PBXNativeTarget "HLSL2ALL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0C1055E20F63AC6008310C9 /* Debug */,
+				E0C1055F20F63AC6008310C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E0C1054E20F63AC5008310C9 /* Project object */;
+}

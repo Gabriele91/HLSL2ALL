@@ -6,23 +6,31 @@
 //  Copyright © 2018 Gabriele Di Bari. All rights reserved.
 //
 #pragma once
-#include "Square/Config.h"
-#include "Square/Driver/Render.h"
+#include <string>
 
 namespace Square
 {
     //Spirv
     using SpirvShader  = std::vector<unsigned int>;
+    //config
+    struct GLSLConfig
+    {
+        int  m_version{ 410 };
+        bool m_es{ false };
+        bool m_fixup_clipspace{ true };
+        bool m_flip_vert_y{ true };
+        bool m_rename_input_with_semantic{ false };
+        std::string m_semanti_prefix{ "in_" };
+    };
     //convert
-	SQUARE_API bool spirv_to_glsl
+    bool spirv_to_glsl
     (
        SpirvShader shader
      , std::string& source_glsl
-     , int OpenGL_client_version = 410
-     , bool OpenGL_ES = false
+     , const GLSLConfig& config = GLSLConfig()
     );  
 	//convert
-	SQUARE_API bool spirv_to_hlsl
+    bool spirv_to_hlsl
 	(
 		  SpirvShader shader
 		, std::string& source_hlsl
