@@ -21,7 +21,10 @@ set(HEADER_FILES include/HLSL2ALL/HLSL2ALL.h include/HLSL2ALL/HLSL2ALLConfig.h i
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ) 
 add_definitions(-DHLSL2ALL_LIBRARY_EXPORT)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-
+# macOS, rpath
+if(APPLE)
+  set_target_properties(${PROJECT_NAME} PROPERTIES BUILD_WITH_INSTALL_RPATH 1 INSTALL_NAME_DIR "@rpath")
+endif()
 
 # GLSLANG
 set(GLSLANG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/glslang")
