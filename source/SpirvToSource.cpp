@@ -43,7 +43,7 @@ static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const s
 			//test
 			for (size_t i = 0; i!=position.size() && is_position; ++i)
 			{ 
-				is_position == std::toupper(semantic[i]) == position[i];
+				is_position = std::toupper(semantic[i]) == position[i];
 			}
 			//change
 			if (is_position) semantic += '0';
@@ -52,6 +52,23 @@ static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const s
         std::string new_name = prefix + semantic;
         //rename
         spirv_cross_util::rename_interface_variable(compiler, resources.stage_inputs, location, new_name);
+    }
+}
+
+static void replace_with_location(spirv_cross::Compiler& compiler, const std::vector<spirv_cross::Resource>& resources)
+{
+	//replace
+    for(const auto& r : resources)
+    {
+        //var name: r.name;
+        if (!compiler.has_decoration(r.id, spv::DecorationLocation))
+            continue;
+        //get info
+        int location = compiler.get_decoration(r.id, spv::DecorationLocation);
+        //new name
+        std::string new_name = "__location" + std::to_string((long)location);
+        //rename
+        spirv_cross_util::rename_interface_variable(compiler, resources, location, new_name);
     }
 }
     
@@ -72,12 +89,27 @@ extern bool spirv_to_glsl
     options.vertex.fixup_clipspace = config.m_fixup_clipspace;
     options.vertex.flip_vert_y = config.m_flip_vert_y;
 	options.vulkan_semantics = false;
+    options.enable_420pack_extension =config.m_enable_420pack_extension;
     glsl.set_common_options(options);
     //info
     if(config.m_rename_input_with_semantic)
     {
         replace_input_with_semantic(glsl, config.m_semanti_prefix, config.m_rename_position_in_position0);
     }
+	//replace input
+	if(config.m_rename_input_with_locations)
+	{
+    	auto active = glsl.get_active_interface_variables();
+    	auto resources = glsl.get_shader_resources(active);
+		replace_with_location(glsl, resources.stage_inputs);
+	}
+	//replace output
+	if(config.m_rename_output_with_locations)
+	{
+    	auto active = glsl.get_active_interface_variables();
+    	auto resources = glsl.get_shader_resources(active);
+		replace_with_location(glsl, resources.stage_outputs);
+	}
     //compile
 	source_glsl = glsl.compile();
     //return

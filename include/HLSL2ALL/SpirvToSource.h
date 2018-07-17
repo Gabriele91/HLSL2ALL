@@ -12,8 +12,8 @@ namespace HLSL2ALL
 {
     //Spirv
     using SpirvShader  = std::vector<unsigned int>;
-	//errors
-	using ErrorSpirvShaderList = std::vector<std::string>;
+    //errors
+    using ErrorSpirvShaderList = std::vector<std::string>;
     //config
     struct GLSLConfig
     {
@@ -22,7 +22,10 @@ namespace HLSL2ALL
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
         bool m_rename_input_with_semantic{ false };
-		bool m_rename_position_in_position0{ false };
+        bool m_rename_position_in_position0{ false };
+        bool m_enable_420pack_extension{ false };
+        bool m_rename_input_with_locations{ false };
+        bool m_rename_output_with_locations{ false };
         std::string m_semanti_prefix{ "in_" };
     };
     //convert
