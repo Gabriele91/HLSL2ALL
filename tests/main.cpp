@@ -7,13 +7,12 @@
 //
 
 #include <iostream>
-#include "SourceToSpirv.h"
-#include "SpirvToSource.h"
+#include "HLSL2ALL/HLSL2ALL.h"
 
 
 int main(int argc, const char * argv[])
 {
-    using namespace Square;
+    using namespace HLSL2ALL;
     std::string hlsl_filename("test.hlsl");
     std::string hlsl_source(
     "#define IVec2 int2\n"

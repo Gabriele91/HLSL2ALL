@@ -5,16 +5,19 @@
 //  Created by Gabriele Di Bari on 25/01/18.
 //  Copyright © 2018 Gabriele Di Bari. All rights reserved.
 //
-#include <iostream>
-#include "SpirvToSource.h"
-#include <spirv_cross/spirv_hlsl.hpp>
-#include <spirv_cross/spirv_glsl.hpp>
-#include <spirv_cross/spirv_reflect.hpp>
-#include <spirv_cross/spirv_cross_util.hpp>
-namespace Square
+#include <cstring>
+#include <cctype>
+#include <algorithm>
+#include "HLSL2ALL/SpirvToSource.h"
+#include "spirv_hlsl.hpp"
+#include "spirv_glsl.hpp"
+#include "spirv_reflect.hpp"
+#include "spirv_cross_util.hpp"
+
+namespace HLSL2ALL
 {
 
-static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const std::string& prefix)
+static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const std::string& prefix, bool rn_pos_in_pos0 = false)
 {
     //info
     auto active = compiler.get_active_interface_variables();
@@ -30,6 +33,21 @@ static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const s
         //get info
         int location = compiler.get_decoration(r.id, spv::DecorationLocation);
         std::string semantic = compiler.get_decoration_string(r.id, spv::DecorationHlslSemanticGOOGLE);
+		//rename
+		if (rn_pos_in_pos0)
+		{
+			//name ref
+			std::string position("POSITION");
+			//same size
+			bool is_position = position.size() == semantic.size();
+			//test
+			for (size_t i = 0; i!=position.size() && is_position; ++i)
+			{ 
+				is_position == std::toupper(semantic[i]) == position[i];
+			}
+			//change
+			if (is_position) semantic += '0';
+		}
         //new name
         std::string new_name = prefix + semantic;
         //rename
@@ -42,7 +60,8 @@ extern bool spirv_to_glsl
 (
   SpirvShader spirv_binary
 , std::string& source_glsl
- , const GLSLConfig& config
+, ErrorSpirvShaderList& errors
+, const GLSLConfig& config
 )
 {
     //init
@@ -57,7 +76,7 @@ extern bool spirv_to_glsl
     //info
     if(config.m_rename_input_with_semantic)
     {
-        replace_input_with_semantic(glsl,config.m_semanti_prefix);
+        replace_input_with_semantic(glsl, config.m_semanti_prefix, config.m_rename_position_in_position0);
     }
     //compile
 	source_glsl = glsl.compile();
@@ -68,32 +87,30 @@ extern bool spirv_to_glsl
 //convert
 extern bool spirv_to_hlsl
 (
-	 SpirvShader spirv_binary
-	, std::string& source_hlsl
-	, int HLSL_client_version
+  SpirvShader spirv_binary
+, std::string& source_hlsl
+, ErrorSpirvShaderList& errors
+, const HLSLConfig& config
 ) 
 {
 	//init
 	spirv_cross::CompilerHLSL hlsl(std::move(spirv_binary));
 	spirv_cross::CompilerHLSL::Options options;
-	options.shader_model = HLSL_client_version;
+	options.shader_model = config.m_hlsl_version;
+    options.point_coord_compat = config.point_coord_compat;
+    options.point_size_compat = config.point_size_compat;
 	hlsl.set_hlsl_options(options);
-	//attrs
-	std::vector< spirv_cross::HLSLVertexAttributeRemap > attrs
-	{
-		{ 0, "POSTION0" },
-	    { 1, "COLOR0" },
-	};
 	//compile
 	try
 	{
-		//
+		//compile
 		source_hlsl = hlsl.compile();
 		return true;
 	}
 	catch (std::exception e)
 	{
-		//none
+		//fail
+        errors.push_back(e.what());
 	}
 	//return
 	return false;

@@ -6,11 +6,9 @@
 //  Copyright © 2018 Gabriele Di Bari. All rights reserved.
 //
 #pragma once
-#include <vector>
-#include <string>
-#include <tuple>
+#include "HLSL2ALL/HLSL2ALLConfig.h"
 
-namespace Square
+namespace HLSL2ALL
 {
     //type of shader
     enum ShaderType
@@ -48,7 +46,7 @@ namespace Square
         bool  m_reverse_mul{ false };
 	};
     //convert
-    bool hlsl_to_spirv
+    HLSL2ALL_API bool hlsl_to_spirv
     (
       const std::string&              hlsl_source
     , const std::string&              hlsl_filename

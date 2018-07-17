@@ -8,7 +8,7 @@
 #define ENABLE_HLSL
 #define NV_EXTENSIONS
 #define AMD_EXTENSIONS
-#include "SourceToSpirv.h"
+#include "HLSL2ALL/SourceToSpirv.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -18,7 +18,8 @@
 #include <SPIRV/GlslangToSpv.h>
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/MachineIndependent/ParseHelper.h>
-namespace glslang
+
+namespace HLSL2ALL
 {
 static const TBuiltInResource DefaultTBuiltInResource =
 {
@@ -119,7 +120,7 @@ static const TBuiltInResource DefaultTBuiltInResource =
 };
 }
 
-namespace Square
+namespace HLSL2ALL
 {
 static EShLanguage render_shader_type_to_glslang_type(ShaderType type)
 {
@@ -141,7 +142,6 @@ static std::vector<std::string> get_function_list(glslang::TIntermediate* interm
 	//name shape
 	using namespace spv;
 	using namespace glslang;
-	using namespace Square;
 	std::vector<std::string> output;
 	//test
 	if (!interm) return {};
@@ -187,7 +187,6 @@ extern bool hlsl_to_spirv
     //name shape
     using namespace spv;
     using namespace glslang;
-    using namespace Square;
 	//select fiels
 	EShTargetLanguageVersion tllanguage = ! target_info.m_vulkan ? EShTargetSpv_1_0 
 										  : target_info.m_client_version == 100 ? EShTargetSpv_1_0 
@@ -289,8 +288,6 @@ extern bool hlsl_to_spirv
 		errors.push_back({ program.getInfoLog() });
         return false;
     }
-	//build info
-	program.buildReflection();
 	//alloc
 	shaders_output.resize(shaders.size());
     //get spriv
@@ -310,8 +307,6 @@ extern bool hlsl_to_spirv
 			SpirvShader output;
 			//get output
 			GlslangToSpv(*program.getIntermediate(shader_type), output, &logger, &spv_options);
-			//spv::SpirvToolsDisassemble(std::cout, output);
-			//spv::Disassemble(std::cout, output);
 			//build
 			std::get<0>(shaders_output[i]) = types[i];
 			std::get<1>(shaders_output[i]) = std::move(output);
