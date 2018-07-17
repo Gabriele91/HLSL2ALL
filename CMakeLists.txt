@@ -1,8 +1,18 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.1.0)
 project(HLSL2ALL VERSION 0.1.0)
+#c++11
+set (CMAKE_CXX_STANDARD 11)
 #add debug prefix
 if(NOT CMAKE_DEBUG_POSTFIX)
   set(CMAKE_DEBUG_POSTFIX d)
+endif()
+#flags
+if(MSVC)
+  set(CMAKE_CXX_FLAGS_DEBUG "/0d")
+  set(CMAKE_CXX_FLAGS_RELEASE "/O3")
+else()
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
 # HLSL2ALL
 set(SOURCE_FILES source/SourceToSpirv.cpp source/SpirvToSource.cpp)
