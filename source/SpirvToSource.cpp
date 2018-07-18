@@ -55,7 +55,7 @@ static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const s
     }
 }
 
-static void replace_with_location(spirv_cross::Compiler& compiler, const std::vector<spirv_cross::Resource>& resources)
+static void replace_with_location(spirv_cross::Compiler& compiler, const std::string& prefix, const std::vector<spirv_cross::Resource>& resources)
 {
 	//replace
     for(const auto& r : resources)
@@ -66,7 +66,7 @@ static void replace_with_location(spirv_cross::Compiler& compiler, const std::ve
         //get info
         int location = compiler.get_decoration(r.id, spv::DecorationLocation);
         //new name
-        std::string new_name = "__location" + std::to_string((long)location);
+        std::string new_name = prefix + "__location" + std::to_string((long)location);
         //rename
         spirv_cross_util::rename_interface_variable(compiler, resources, location, new_name);
     }
@@ -94,21 +94,21 @@ extern bool spirv_to_glsl
     //info
     if(config.m_rename_input_with_semantic)
     {
-        replace_input_with_semantic(glsl, config.m_semanti_prefix, config.m_rename_position_in_position0);
+        replace_input_with_semantic(glsl, config.m_semantic_prefix, config.m_rename_position_in_position0);
     }
 	//replace input
 	if(config.m_rename_input_with_locations)
 	{
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
-		replace_with_location(glsl, resources.stage_inputs);
+		replace_with_location(glsl, config.m_input_prefix, resources.stage_inputs);
 	}
 	//replace output
 	if(config.m_rename_output_with_locations)
 	{
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
-		replace_with_location(glsl, resources.stage_outputs);
+		replace_with_location(glsl, config.m_output_prefix, resources.stage_outputs);
 	}
     //compile
 	source_glsl = glsl.compile();

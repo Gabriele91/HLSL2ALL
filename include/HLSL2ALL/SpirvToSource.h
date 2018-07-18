@@ -21,12 +21,18 @@ namespace HLSL2ALL
         bool m_es{ false };
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
-        bool m_rename_input_with_semantic{ false };
-        bool m_rename_position_in_position0{ false };
         bool m_enable_420pack_extension{ false };
+        //semantic
+        bool m_rename_input_with_semantic{ false };
+        std::string m_semantic_prefix{ "in_" };
+        //rename POSITION in POSITION0
+        bool m_rename_position_in_position0{ false };
+        //rename input with prefix__location[N]
         bool m_rename_input_with_locations{ false };
+        std::string m_input_prefix{ "" };
+        //rename output with prefix__location[N]
         bool m_rename_output_with_locations{ false };
-        std::string m_semanti_prefix{ "in_" };
+        std::string m_output_prefix{ "" };
     };
     //convert
     HLSL2ALL_API bool spirv_to_glsl
