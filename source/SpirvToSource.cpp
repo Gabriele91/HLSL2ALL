@@ -77,6 +77,7 @@ extern bool spirv_to_glsl
 (
   SpirvShader spirv_binary
 , std::string& source_glsl
+, TextureSamplerList& texture_samplers
 , ErrorSpirvShaderList& errors
 , const GLSLConfig& config
 )
@@ -88,7 +89,7 @@ extern bool spirv_to_glsl
     options.es = config.m_es;
     options.vertex.fixup_clipspace = config.m_fixup_clipspace;
     options.vertex.flip_vert_y = config.m_flip_vert_y;
-	options.vulkan_semantics = false;
+	options.vulkan_semantics = config.m_vulkan_semantics;
     options.enable_420pack_extension =config.m_enable_420pack_extension;
     glsl.set_common_options(options);
     //info
@@ -109,6 +110,12 @@ extern bool spirv_to_glsl
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
 		replace_with_location(glsl, config.m_output_prefix, resources.stage_outputs);
+	}
+	//combine
+	if(config.m_combined_texture_samplers)
+	{
+		glsl.build_dummy_sampler_for_combined_images();
+		glsl.build_combined_image_samplers();
 	}
     //compile
 	source_glsl = glsl.compile();

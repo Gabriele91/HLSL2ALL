@@ -197,6 +197,10 @@ extern bool hlsl_to_spirv
 	EShClient client = target_info.m_vulkan ? EShClientVulkan : EShClientOpenGL;
 	//EOptionDefaultDesktop
 	int default_version = target_info.m_desktop ? 110 : 100;
+    //chouse mode to skeep texture/sampler
+    EShTextureSamplerTransformMode tmode = target_info.m_upgrade_texture_to_samples ?  EShTexSampTransUpgradeTextureRemoveSampler : EShTexSampTransKeep;
+    //flat array of texture
+    bool ta_to_flat = target_info.m_samplerarray_to_flat;
     //type of spirv
     const int clent_semantic_version = 100;   // maps to, say, #define VULKAN 100
 	const int flags_messages =  EShMsgDefault
@@ -204,13 +208,10 @@ extern bool hlsl_to_spirv
 								| EShMsgReadHlsl
 							    | EShMsgHlslOffsets
 							    | EShMsgHlslLegalization
-								//spirv builds rules
-								| EShMsgVulkanRules
-								| EShMsgSpvRules
 								//debug
 								| EShMsgDebugInfo 
-								//vulkan
-								| (target_info.m_vulkan ? EShMsgVulkanRules : 0);
+								//vulkan or opengl
+								| (target_info.m_vulkan ? EShMsgVulkanRules : EShMsgSpvRules);
     //shaders
     TProgram program;
 	std::vector< int > types;
@@ -246,8 +247,11 @@ extern bool hlsl_to_spirv
 		shader->setEnvInput(EShSourceHlsl, shader_type, client, clent_semantic_version);
 		shader->setEnvClient(client, tcversion);
 		shader->setEnvTarget(EShTargetSpv, tllanguage);
+        //texture
+        shader->setTextureSamplerTransformMode(tmode);
+        shader->setFlattenUniformArrays(ta_to_flat);
         //mapping
-        shader->setTextureSamplerTransformMode(EShTexSampTransKeep);
+        shader->setNoStorageFormat(true);
         shader->setHlslIoMapping(true); //16bit
         shader->setAutoMapBindings(true);
         shader->setAutoMapLocations(true);
@@ -307,6 +311,8 @@ extern bool hlsl_to_spirv
 			SpirvShader output;
 			//get output
 			GlslangToSpv(*program.getIntermediate(shader_type), output, &logger, &spv_options);
+            //spv::Parameterize();
+            //spv::Disassemble(std::cout, output);
 			//build
 			std::get<0>(shaders_output[i]) = types[i];
 			std::get<1>(shaders_output[i]) = std::move(output);
