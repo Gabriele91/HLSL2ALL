@@ -44,6 +44,8 @@ namespace HLSL2ALL
 		bool  m_vulkan{ false };
 		bool  m_desktop{ true };
         bool  m_reverse_mul{ false };
+        bool  m_samplerarray_to_flat{ true };
+        bool  m_upgrade_texture_to_samples{ true };
 	};
     //convert
     HLSL2ALL_API bool hlsl_to_spirv

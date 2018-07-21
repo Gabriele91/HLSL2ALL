@@ -8,7 +8,6 @@ if(NOT CMAKE_DEBUG_POSTFIX)
 endif()
 #flags
 if(MSVC)
-  set(CMAKE_CXX_FLAGS_DEBUG "/0d")
   set(CMAKE_CXX_FLAGS_RELEASE "/O3")
 else()
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
@@ -49,3 +48,8 @@ set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${spirv_cross_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SPIRVCROSS_DIR})
+
+# HLSL Test
+add_executable(HLSLTEST  tests/main.cpp)
+target_link_libraries(HLSLTEST PRIVATE ${PROJECT_NAME})
+target_include_directories(HLSLTEST PUBLIC include)
