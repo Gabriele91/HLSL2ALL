@@ -40,6 +40,10 @@ R"HLSL(
 #define DVec4 double4
 #define DMat3 double3x3
 #define DMat4 double4x4
+#define Sampler2D(name) SamplerState  name; Texture2D name ## _texture;
+#define Sampler3D(name) SamplerState  name; Texture3D name ## _texture;
+#define SamplerCube(name) SamplerState  name; TextureCube name ## _texture;
+#define sample_texture(name,pos) name ## _texture.Sample(name,pos)
 )HLSL");
     hlsl_source += R"HLSL(
     #line 45
@@ -77,7 +81,7 @@ R"HLSL(
     Vec4 color;
 
     //texture
-	uniform sampler2D diffuse_texture;
+	Sampler2D(diffuse_texture);
 
     VertexShaderOutput vertex(VertexShaderInput input)
     {
@@ -95,7 +99,7 @@ R"HLSL(
     
     Vec4 fragment(VertexShaderOutput input) : SV_TARGET
     {
-        Vec4 texture_color = tex2D(diffuse_texture, Vec2(1.0,1.0));
+        Vec4 texture_color = sample_texture(diffuse_texture, Vec2(1.0,1.0));
         if (texture_color.a <= mask) discard;
         return  color * Vec4(texture_color.rgb,1.0);
     }
@@ -129,7 +133,7 @@ R"HLSL(
     spirv_info.m_reverse_mul = true;
     spirv_info.m_vulkan = false;
     spirv_info.m_upgrade_texture_to_samples = false;
-    spirv_info.m_samplerarray_to_flat = false;
+    spirv_info.m_samplerarray_to_flat = true;
     //build
     if (!hlsl_to_spirv(  hlsl_source
                        , hlsl_filename
@@ -153,8 +157,6 @@ R"HLSL(
     glsl_config.m_fixup_clipspace = true;
     glsl_config.m_flip_vert_y = false;
     glsl_config.m_enable_420pack_extension = false;
-    glsl_config.m_combined_texture_samplers = false;
-    glsl_config.m_force_to_push_sample_uniform_as_texture = true;
     HLSL2ALL::TextureSamplerList tex_samples;
     //to GLSL
     //spirv to glsl
@@ -180,7 +182,6 @@ R"HLSL(
             {
                 std::cout << err << std::endl;
             }
-            return false;
         }
         //cpp
         std::cout << glsl_output << std::endl;
