@@ -188,8 +188,10 @@ extern bool hlsl_to_spirv
     using namespace spv;
     using namespace glslang;
 	//select fiels
-	EShTargetLanguageVersion tllanguage = ! target_info.m_vulkan ? EShTargetSpv_1_0 
-										  : target_info.m_client_version == 100 ? EShTargetSpv_1_0 
+	EShTargetLanguageVersion tllanguage =  (!target_info.m_vulkan) 
+                                          ? EShTargetSpv_1_0 
+										  : target_info.m_client_version == 100 
+                                          ? EShTargetSpv_1_0 
 										  : EShTargetSpv_1_3;
 	EShTargetClientVersion tcversion = ! target_info.m_vulkan ? EShTargetOpenGL_450
 									   : target_info.m_client_version == 100 ? EShTargetVulkan_1_0
@@ -198,7 +200,9 @@ extern bool hlsl_to_spirv
 	//EOptionDefaultDesktop
 	int default_version = target_info.m_desktop ? 110 : 100;
     //chouse mode to skeep texture/sampler
-    EShTextureSamplerTransformMode tmode = target_info.m_upgrade_texture_to_samples ?  EShTexSampTransUpgradeTextureRemoveSampler : EShTexSampTransKeep;
+    EShTextureSamplerTransformMode tmode = target_info.m_upgrade_texture_to_samples 
+                                        ? EShTexSampTransUpgradeTextureRemoveSampler 
+                                        : EShTexSampTransKeep;
     //flat array of texture
     bool ta_to_flat = target_info.m_samplerarray_to_flat;
     //type of spirv
@@ -207,11 +211,12 @@ extern bool hlsl_to_spirv
 								//hlsl
 								| EShMsgReadHlsl
 							    | EShMsgHlslOffsets
-							    | EShMsgHlslLegalization
+							  //| EShMsgHlslLegalization
 								//debug
 								| EShMsgDebugInfo 
-								//vulkan or opengl
-								| (target_info.m_vulkan ? EShMsgVulkanRules : EShMsgSpvRules);
+								//vulkan spirv
+								|  EShMsgVulkanRules
+                                |  EShMsgSpvRules;
     //shaders
     TProgram program;
 	std::vector< int > types;
@@ -311,11 +316,9 @@ extern bool hlsl_to_spirv
 			SpirvShader output;
 			//get output
 			GlslangToSpv(*program.getIntermediate(shader_type), output, &logger, &spv_options);
-            //spv::Parameterize();
-            //spv::Disassemble(std::cout, output);
 			//build
-			std::get<0>(shaders_output[i]) = types[i];
-			std::get<1>(shaders_output[i]) = std::move(output);
+            shaders_output[i].m_type = types[i];
+            shaders_output[i].m_shader = output;
         }
     }
     return shaders_output.size();
