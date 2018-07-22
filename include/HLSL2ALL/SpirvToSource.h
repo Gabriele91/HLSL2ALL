@@ -34,6 +34,8 @@ namespace HLSL2ALL
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
         bool m_enable_420pack_extension{ false };
+        //legacy sample2D/3D/Cube whitout vulkan semantic
+        bool m_force_to_push_sample_uniform_as_texture{ false };
         //combine shaders
         bool m_combined_texture_samplers{ true };
         //semantic

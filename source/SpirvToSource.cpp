@@ -9,8 +9,9 @@
 #include <cctype>
 #include <algorithm>
 #include "HLSL2ALL/SpirvToSource.h"
-#include "spirv_hlsl.hpp"
+#include "spirv.hpp"
 #include "spirv_glsl.hpp"
+#include "spirv_hlsl.hpp"
 #include "spirv_reflect.hpp"
 #include "spirv_cross_util.hpp"
 
@@ -71,7 +72,40 @@ static void replace_with_location(spirv_cross::Compiler& compiler, const std::st
         spirv_cross_util::rename_interface_variable(compiler, resources, location, new_name);
     }
 }
-    
+
+static void add_sample_uniforms(spirv_cross::Compiler& compiler, std::string& output_source, const std::vector<spirv_cross::Resource>& resources)
+{
+	//replace
+    for(const auto& r : resources)
+    {
+		//type
+		auto &type = compiler.get_type(r.base_type_id);
+		//type
+		if (type.basetype == spirv_cross::SPIRType::Sampler)
+		{
+			//name
+			std::string name = compiler.get_name(r.id);
+			//
+			switch(type.image.dim)
+			{
+				case spv::Dim::Dim1D:
+					output_source = std::string("uniform sample1D ") + name + output_source;
+				break;
+				case spv::Dim::Dim2D:
+					output_source = "uniform sample2D " + name + output_source;
+				break;
+				case spv::Dim::Dim3D:
+					output_source = "uniform sample3D " + name + output_source;
+				break;
+				case spv::Dim::DimCube:
+					output_source = "uniform sampleCube " + name + output_source;
+				break;
+				default:
+					break;
+			}			 
+		}
+    }
+}
 //convert
 extern bool spirv_to_glsl
 (
@@ -119,6 +153,13 @@ extern bool spirv_to_glsl
 	}
     //compile
 	source_glsl = glsl.compile();
+	//force to add sample uniforms
+	if(config.m_force_to_push_sample_uniform_as_texture && !options.vulkan_semantics)
+	{
+    	auto active = glsl.get_active_interface_variables();
+    	auto resources = glsl.get_shader_resources(active);
+		add_sample_uniforms(glsl, source_glsl, resources.separate_samplers);
+	}
     //return
     return true;
 }
