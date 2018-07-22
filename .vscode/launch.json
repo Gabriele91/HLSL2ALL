@@ -15,5 +15,24 @@
             "environment": [],
             "externalConsole": true
         }
+    ],    
+    "configurations": [
+        {
+            "name": "(Unix) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/HLSLTEST",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "linux": {
+               "MIMode": "gdb",
+            },
+            "osx": {
+                "MIMode": "lldb"
+            },
+            "environment": [],
+            "externalConsole": true
+        }
     ]
 }
