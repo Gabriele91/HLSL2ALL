@@ -25,6 +25,13 @@ namespace HLSL2ALL
 		int m_sampler_id;
 	};
 	using TextureSamplerList = std::vector< TextureSampler >;
+    //rename texture modes
+    enum RenameTextureMode
+    {
+         COMBINE_TEXTURE_AND_SAMPLE     // NAME(TEXTURE) <- NAME(TEXTURE)+NAME(SAMPLE)
+       , RENAME_TEXTURE_WITH_SAMPLE     // NAME(TEXTURE) <- NAME(SAMPLE)
+       , FORCE_TO_ADD_SAMPLE_AS_TEXTURE // LEGACY HLSL SOURCE
+    };
     //config
     struct GLSLConfig
     {
@@ -34,10 +41,8 @@ namespace HLSL2ALL
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
         bool m_enable_420pack_extension{ false };
-        //legacy sample2D/3D/Cube whitout vulkan semantic
-        bool m_force_to_push_sample_uniform_as_texture{ false };
-        //combine shaders
-        bool m_combined_texture_samplers{ true };
+        //rename texture
+        RenameTextureMode m_rename_texture_mode{RENAME_TEXTURE_WITH_SAMPLE};
         //semantic
         bool m_rename_input_with_semantic{ false };
         std::string m_semantic_prefix{ "in_" };

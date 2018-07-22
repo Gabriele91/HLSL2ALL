@@ -146,15 +146,32 @@ extern bool spirv_to_glsl
 		replace_with_location(glsl, config.m_output_prefix, resources.stage_outputs);
 	}
 	//combine
-	if(config.m_combined_texture_samplers)
+	if(config.m_rename_texture_mode != RenameTextureMode::FORCE_TO_ADD_SAMPLE_AS_TEXTURE)
 	{
 		glsl.build_dummy_sampler_for_combined_images();
 		glsl.build_combined_image_samplers();
-	}
+		//rename
+		switch(config.m_rename_texture_mode)
+		{
+			default:
+			case RenameTextureMode::COMBINE_TEXTURE_AND_SAMPLE:
+				for (auto &remap : glsl.get_combined_image_samplers())
+				{
+					glsl.set_name(remap.combined_id, glsl.get_name(remap.image_id) +  glsl.get_name(remap.sampler_id));
+				}
+			break;
+			case RenameTextureMode::RENAME_TEXTURE_WITH_SAMPLE:
+				for (auto &remap : glsl.get_combined_image_samplers())
+				{
+					glsl.set_name(remap.combined_id, glsl.get_name(remap.sampler_id));
+				}
+			break;
+		}
+ 	}
     //compile
 	source_glsl = glsl.compile();
 	//force to add sample uniforms
-	if(config.m_force_to_push_sample_uniform_as_texture && !options.vulkan_semantics)
+	if(config.m_rename_texture_mode == RenameTextureMode::FORCE_TO_ADD_SAMPLE_AS_TEXTURE)
 	{
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
