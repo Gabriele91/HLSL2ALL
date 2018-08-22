@@ -7,6 +7,8 @@
 //
 #include <cstring>
 #include <cctype>
+#include <regex>
+#include <iterator>
 #include <algorithm>
 #include "HLSL2ALL/SpirvToSource.h"
 #include "spirv.hpp"
@@ -106,6 +108,23 @@ static void add_sample_uniforms(spirv_cross::Compiler& compiler, std::string& ou
 		}
     }
 }
+    
+static std::string delete_texture_query_levels(const std::string& in_source)
+{
+    //remove "#extension GL_ARB_texture_query_levels : require\n"
+    //remove "uint param = uint(textureQueryLevels(SPIRV_Cross_Combinedtex2DSPIRV_Cross_DummySampler));\n"
+    //regexs
+    std::regex gl_arb_texture_query_levels_re("#extension(\\s)*GL_ARB_texture_query_levels(\\s)*\\:(\\s)require");
+    std::regex texture_query_levels_re("uint\\(textureQueryLevels\\((\\w)*\\)\\)");
+    //output
+    std::string remove_gl_arg_texture_query;
+    std::regex_replace (std::back_inserter(remove_gl_arg_texture_query), in_source.begin(), in_source.end(), gl_arb_texture_query_levels_re, "");
+    std::string remove_texture_query_levels;
+    std::regex_replace (std::back_inserter(remove_texture_query_levels), remove_gl_arg_texture_query.begin(), remove_gl_arg_texture_query.end(), texture_query_levels_re, "0");
+    //return
+    return remove_texture_query_levels;
+}
+
 //convert
 extern bool spirv_to_glsl
 (
@@ -177,6 +196,11 @@ extern bool spirv_to_glsl
     	auto resources = glsl.get_shader_resources(active);
 		add_sample_uniforms(glsl, source_glsl, resources.separate_samplers);
 	}
+    //force to remove query texture
+    if(config.m_force_to_remove_query_texture)
+    {
+        source_glsl = delete_texture_query_levels(source_glsl);
+    }
     //return
     return true;
 }

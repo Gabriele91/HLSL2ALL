@@ -41,6 +41,8 @@ namespace HLSL2ALL
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
         bool m_enable_420pack_extension{ false };
+        //remove GL_ARB_texture_query_levels
+        bool m_force_to_remove_query_texture{ false };
         //rename texture
         RenameTextureMode m_rename_texture_mode{RENAME_TEXTURE_WITH_SAMPLE};
         //semantic
