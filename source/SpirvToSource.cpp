@@ -205,6 +205,32 @@ extern bool spirv_to_glsl
     return true;
 }
 
+//rename cbuffer 
+static void replace_auto_cbuffer_names_with_source_names(spirv_cross::Compiler& compiler)
+{
+    //info
+    auto active = compiler.get_active_interface_variables();
+    spirv_cross::ShaderResources resources = compiler.get_shader_resources(active);
+	//using name space
+	using namespace spv;
+	using namespace spirv_cross;
+	using namespace spirv_cross_util;
+    //replace
+    for(const auto& r : resources.uniform_buffers)
+    {
+		//type		
+		auto &type = compiler.get_type(r.base_type_id);
+        //get info
+		bool is_block = compiler.get_decoration_bitset(type.self).get(DecorationBlock) ||
+						compiler.get_decoration_bitset(type.self).get(DecorationBufferBlock);
+		//test
+		if (is_block)
+		{
+        		std::string name = r.name;
+				compiler.set_name(r.id, name);
+		}
+    }
+}
 //convert
 extern bool spirv_to_hlsl
 (
@@ -218,9 +244,12 @@ extern bool spirv_to_hlsl
 	spirv_cross::CompilerHLSL hlsl(std::move(spirv_binary));
 	spirv_cross::CompilerHLSL::Options options;
 	options.shader_model = config.m_hlsl_version;
-    options.point_coord_compat = config.point_coord_compat;
-    options.point_size_compat = config.point_size_compat;
+    options.point_coord_compat = config.m_point_coord_compat;
+    options.point_size_compat = config.m_point_size_compat;
 	hlsl.set_hlsl_options(options);
+	//force
+	if(config.m_replace_auto_cbuffer_names_with_source_names)
+		replace_auto_cbuffer_names_with_source_names(hlsl);
 	//compile
 	try
 	{

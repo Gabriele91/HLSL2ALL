@@ -69,9 +69,10 @@ namespace HLSL2ALL
     //HLSLConfig
     struct HLSLConfig
     {
-        int m_hlsl_version{ 50 };
-        bool point_size_compat{ false };
-        bool point_coord_compat { false };
+        int  m_hlsl_version{ 50 };
+        bool m_point_size_compat{ false };
+        bool m_point_coord_compat { false };
+        bool m_replace_auto_cbuffer_names_with_source_names { true };
     };
 	//convert
     HLSL2ALL_API bool spirv_to_hlsl

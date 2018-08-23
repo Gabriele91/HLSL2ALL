@@ -1,6 +1,8 @@
 ##################################################################################################
 # dependencies
 [Dd]ependencies/**
+# build
+[Bb]uild*
 
 ##################################################################################################
 # Created by https://www.gitignore.io/api/linux,xcode,macos,windows,visualstudio,visualstudiocode
