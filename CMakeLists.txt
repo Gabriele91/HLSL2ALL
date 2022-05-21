@@ -8,7 +8,7 @@ if(NOT CMAKE_DEBUG_POSTFIX)
 endif()
 #flags
 if(MSVC)
-  set(CMAKE_CXX_FLAGS_RELEASE "/O3")
+  set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
 else()
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
@@ -28,12 +28,12 @@ endif()
 # GLSLANG
 set(GLSLANG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/glslang")
 
-# FLAGS)
-if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DENABLE_OPT" )
+# FLAGS
+#if(MSVC)
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DENABLE_OPT" )
 #else()
 #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_OPT" )
-endif()
+#endif()
 
 add_subdirectory(${GLSLANG_DIR})
 set(glslang_libraries glslang HLSL OSDependent OGLCompiler SPIRV glslang-default-resource-limits)
