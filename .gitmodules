@@ -3,4 +3,5 @@
 	url = https://github.com/KhronosGroup/SPIRV-Cross
 [submodule "external/glslang"]
 	path = external/glslang
-	url = https://github.com/KhronosGroup/glslang
+	url = https://github.com/Gabriele91/glslang-fix/
+	branch = fix/HLSL-Instance-attribute-as-spirv-invocation-attribute

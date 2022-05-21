@@ -58,7 +58,7 @@ static void replace_input_with_semantic(spirv_cross::Compiler& compiler, const s
     }
 }
 
-static void replace_with_location(spirv_cross::Compiler& compiler, const std::string& prefix, const std::vector<spirv_cross::Resource>& resources)
+static void replace_with_location(spirv_cross::Compiler& compiler, const std::string& prefix, const spirv_cross::SmallVector<spirv_cross::Resource>& resources)
 {
 	//replace
     for(const auto& r : resources)
@@ -75,7 +75,7 @@ static void replace_with_location(spirv_cross::Compiler& compiler, const std::st
     }
 }
 
-static void add_sample_uniforms(spirv_cross::Compiler& compiler, std::string& output_source, const std::vector<spirv_cross::Resource>& resources)
+static void add_sample_uniforms(spirv_cross::Compiler& compiler, std::string& output_source, const spirv_cross::SmallVector<spirv_cross::Resource>& resources)
 {
 	//replace
     for(const auto& r : resources)
