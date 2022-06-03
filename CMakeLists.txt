@@ -9,9 +9,12 @@ endif()
 #flags
 if(MSVC)
   set(CMAKE_CXX_FLAGS_RELEASE "/O3")
-else()
+elseif(APPLE)
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+else()
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fPIC -pthread")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fPIC -pthread")
 endif()
 # HLSL2ALL
 set(SOURCE_FILES source/SourceToSpirv.cpp source/SpirvToSource.cpp)
@@ -49,7 +52,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/OSDepe
 
 # SPIRVCROSS
 set(SPIRVCROSS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-cross")
-
 add_subdirectory(${SPIRVCROSS_DIR})
 set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util spirv-cross-glsl spirv-cross-hlsl)
 
