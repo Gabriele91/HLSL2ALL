@@ -21,8 +21,7 @@
 
 namespace HLSL2ALL
 {
-static const TBuiltInResource DefaultTBuiltInResource =
-{
+static const TBuiltInResource DefaultTBuiltInResource = {
     /* .MaxLights = */ 32,
     /* .MaxClipPlanes = */ 6,
     /* .MaxTextureUnits = */ 32,
@@ -106,7 +105,19 @@ static const TBuiltInResource DefaultTBuiltInResource =
     /* .MaxCullDistances = */ 8,
     /* .MaxCombinedClipAndCullDistances = */ 8,
     /* .MaxSamples = */ 4,
-    /* .limits = */ {
+    /* .maxMeshOutputVerticesNV = */ 256,
+    /* .maxMeshOutputPrimitivesNV = */ 512,
+    /* .maxMeshWorkGroupSizeX_NV = */ 32,
+    /* .maxMeshWorkGroupSizeY_NV = */ 1,
+    /* .maxMeshWorkGroupSizeZ_NV = */ 1,
+    /* .maxTaskWorkGroupSizeX_NV = */ 32,
+    /* .maxTaskWorkGroupSizeY_NV = */ 1,
+    /* .maxTaskWorkGroupSizeZ_NV = */ 1,
+    /* .maxMeshViewCountNV = */ 4,
+    /* .maxDualSourceDrawBuffersEXT = */ 1,
+
+    /* .limits = */
+    {
     /* .nonInductiveForLoops = */ 1,
     /* .whileLoops = */ 1,
     /* .doWhileLoops = */ 1,
@@ -212,6 +223,7 @@ extern bool hlsl_to_spirv
 								| EShMsgReadHlsl
 							    | EShMsgHlslOffsets
 							  //| EShMsgHlslLegalization
+                              //| EShMsgBuiltinSymbolTable
 								//debug
 								| EShMsgDebugInfo 
 								//vulkan spirv
@@ -312,6 +324,7 @@ extern bool hlsl_to_spirv
 			spv_options.generateDebugInfo = true;
 			spv_options.disableOptimizer = false;
 			spv_options.optimizeSize = true;
+            // spv_options.validate = true;
 			//shader output
 			SpirvShader output;
 			//get output

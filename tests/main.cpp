@@ -96,6 +96,21 @@ R"HLSL(
         
         return output;
     }
+
+    [maxvertexcount(3)]
+    [instance(9)]
+    void geometry(triangle VertexShaderOutput input[3]
+			    , inout TriangleStream<VertexShaderOutput> output
+	            , uint id : SV_GSInstanceID)
+    {
+	    // for each triangle's vertices
+	    [loop]
+	    for (int i = 0; i < 3; ++i)
+	    {
+		    output.Append(input[i]);
+	    }
+	    output.RestartStrip();
+    }
     
     Vec4 fragment(VertexShaderOutput input) : SV_TARGET
     {
