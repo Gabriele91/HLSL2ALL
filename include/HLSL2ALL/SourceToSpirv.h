@@ -36,6 +36,15 @@ namespace HLSL2ALL
         SpirvShader m_shader;
     };
 	using TypeSpirvShaderList = std::vector< TypeSpirvShader >;
+    //Hlsl
+    using HLSLShader  = std::string;
+	//Spirv
+    struct TypeHLSLShader
+    {
+        int m_type;
+        HLSLShader m_shader;
+    };
+	using TypeHLSLShaderList = std::vector< TypeHLSLShader >;
 	//errors
 	using ErrorSpirvShaderList = std::vector<std::string>;
 	//errors
@@ -50,6 +59,7 @@ namespace HLSL2ALL
         bool  m_samplerarray_to_flat{ true };
         bool  m_upgrade_texture_to_samples{ true };
 	};
+    
     //convert
     HLSL2ALL_API bool hlsl_to_spirv
     (
@@ -59,5 +69,17 @@ namespace HLSL2ALL
     , TypeSpirvShaderList&			  shaders_output
     , ErrorSpirvShaderList&			  errors
     , TargetShaderInfo			      target_info = TargetShaderInfo()
+    );
+    
+    //convert
+    HLSL2ALL_API bool hlsl_to_hlsl_preprocessed
+    (
+      const std::string&              hlsl_source
+    , const std::string&              hlsl_filename
+    , const std::vector<ShaderInfo>&  shaders_info
+    , TypeHLSLShaderList&			  shaders_output
+    , ErrorSpirvShaderList&			  errors
+    , TargetShaderInfo			      target_info = TargetShaderInfo()
+    , bool                            remove_shader_wo_entrypoint = false
     );
 }

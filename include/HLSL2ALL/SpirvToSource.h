@@ -28,7 +28,8 @@ namespace HLSL2ALL
     //rename texture modes
     enum RenameTextureMode
     {
-         COMBINE_TEXTURE_AND_SAMPLE     // NAME(TEXTURE) <- NAME(TEXTURE)+NAME(SAMPLE)
+         USE_TEXTURE_NAME               // NAME(TEXTURE)
+       , COMBINE_TEXTURE_AND_SAMPLE     // NAME(TEXTURE) <- NAME(TEXTURE)+NAME(SAMPLE)
        , RENAME_TEXTURE_WITH_SAMPLE     // NAME(TEXTURE) <- NAME(SAMPLE)
        , FORCE_TO_ADD_SAMPLE_AS_TEXTURE // LEGACY HLSL SOURCE
     };
@@ -44,7 +45,7 @@ namespace HLSL2ALL
         //remove GL_ARB_texture_query_levels
         bool m_force_to_remove_query_texture{ false };
         //rename texture
-        RenameTextureMode m_rename_texture_mode{RENAME_TEXTURE_WITH_SAMPLE};
+        RenameTextureMode m_rename_texture_mode{ USE_TEXTURE_NAME };
         //semantic
         bool m_rename_input_with_semantic{ false };
         std::string m_semantic_prefix{ "in_" };

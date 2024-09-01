@@ -122,7 +122,7 @@ R"HLSL(
     //inputs
     std::string shader_target_name[ST_N_SHADER]
     {
-        "vertex"
+          "vertex"
         , "fragment"
         , "geometry"
         , "tass_control"
@@ -130,6 +130,7 @@ R"HLSL(
         , "compute"
     };
     //save types
+    HLSL2ALL::TypeHLSLShaderList shader_hlsl_outputs;
     HLSL2ALL::TypeSpirvShaderList shader_spirv_outputs;
     HLSL2ALL::ErrorSpirvShaderList shader_spirv_errors;
     HLSL2ALL::InfoSpirvShaderList shader_spirv_info
@@ -149,7 +150,29 @@ R"HLSL(
     spirv_info.m_vulkan = false;
     spirv_info.m_upgrade_texture_to_samples = false;
     spirv_info.m_samplerarray_to_flat = true;
-    //build
+    // Preprocess
+    if (!hlsl_to_hlsl_preprocessed(  hlsl_source
+                                   , hlsl_filename
+                                   , shader_spirv_info
+                                   , shader_hlsl_outputs
+                                   , shader_spirv_errors
+                                   , spirv_info
+                                   , true
+                                    ))
+    {
+        for(auto&& error : shader_spirv_errors)
+        {
+            std::cout << error << std::endl;
+        }
+    }
+    else 
+    {
+        for (const TypeHLSLShader& shoutput : shader_hlsl_outputs)
+        {
+            std::cout << shoutput.m_shader << std::endl;
+        }
+    }
+    // Build
     if (!hlsl_to_spirv(  hlsl_source
                        , hlsl_filename
                        , shader_spirv_info

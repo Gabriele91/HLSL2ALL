@@ -173,6 +173,12 @@ extern bool spirv_to_glsl
 		switch(config.m_rename_texture_mode)
 		{
 			default:
+			case RenameTextureMode::USE_TEXTURE_NAME:
+				for (auto &remap : glsl.get_combined_image_samplers())
+				{
+					glsl.set_name(remap.combined_id, glsl.get_name(remap.image_id));
+				}
+			break;
 			case RenameTextureMode::COMBINE_TEXTURE_AND_SAMPLE:
 				for (auto &remap : glsl.get_combined_image_samplers())
 				{
