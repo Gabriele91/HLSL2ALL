@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.1.0)
 project(HLSL2ALL VERSION 0.1.0)
 #c++11
 set (CMAKE_CXX_STANDARD 11)
+# Option to enable or disable HLSL Test
+option(ENABLE_HLSL2ALL_TEST "Enable building of the HLSLTEST target" ON)
+
 #add debug prefix
 if(NOT CMAKE_DEBUG_POSTFIX)
   set(CMAKE_DEBUG_POSTFIX d)
@@ -9,6 +12,7 @@ endif()
 #flags
 if(MSVC)
   set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
+  set(CMAKE_CXX_FLAGS_DEBUG " /Zi /Od /MDd")
 elseif(APPLE)
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
@@ -59,6 +63,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${spirv_cross_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SPIRVCROSS_DIR})
 
 # HLSL Test
-add_executable(HLSLTEST  tests/main.cpp)
-target_link_libraries(HLSLTEST PRIVATE ${PROJECT_NAME})
-target_include_directories(HLSLTEST PUBLIC include)
+if(ENABLE_HLSL2ALL_TEST)
+  add_executable(HLSLTEST  tests/main.cpp)
+  target_link_libraries(HLSLTEST PRIVATE ${PROJECT_NAME})
+  target_include_directories(HLSLTEST PUBLIC include)
+endif()
