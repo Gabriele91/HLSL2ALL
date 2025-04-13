@@ -451,11 +451,13 @@ extern bool hlsl_to_hlsl_preprocessed
     sources.push_back(hlsl_source.c_str());
     filenames.push_back( hlsl_filename.c_str());
     lengths.push_back((int)hlsl_source.size());
+    //Shared ptr
+    std::unique_ptr< TShader > shader(nullptr);
     //configure
 	for (auto shader_info : shaders_info)
 	{
 		auto shader_type = render_shader_type_to_glslang_type(shader_info.m_type);
-		auto shader = std::make_shared<TShader>(shader_type);
+        shader = std::make_unique<TShader>(shader_type);
 		shader->setStringsWithLengthsAndNames(sources.data(), lengths.data(), filenames.data(), (int)sources.size());
 		shader->setEntryPoint(shader_info.m_name.c_str());		
 		//by target selected
@@ -513,6 +515,12 @@ extern bool hlsl_to_hlsl_preprocessed
                 });
             }
         }
+    }
+    // Error?
+    if (shaders_output.empty() && shader && strlen(shader->getInfoLog()) != 0)
+    {
+        errors.push_back("Shader compile error");
+        errors.push_back({ shader->getInfoLog() });
     }
     return shaders_output.size();
 }
