@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(HLSL2ALL VERSION 0.1.0)
-#c++11
-set (CMAKE_CXX_STANDARD 11)
+# C++17
+set (CMAKE_CXX_STANDARD 17)
 # Option to enable or disable HLSL Test
 option(ENABLE_HLSL2ALL_TEST "Enable building of the HLSLTEST target" ON)
 
