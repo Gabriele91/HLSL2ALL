@@ -55,7 +55,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/OGLCompilersDL
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/OSDependent")
 
 # SPIRVCROSS
-set(SPIRVCROSS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-cross")
+set(SPIRVCROSS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-Cross")
 add_subdirectory(${SPIRVCROSS_DIR})
 set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util spirv-cross-glsl spirv-cross-hlsl)
 
