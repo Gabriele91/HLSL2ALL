@@ -1,7 +1,8 @@
 [submodule "external/SPIRV-Cross"]
 	path = external/SPIRV-Cross
-	url = https://github.com/KhronosGroup/SPIRV-Cross
+	url = git@github.com:Gabriele91/SPIRV-Cross.git
+	branch = fix/macos-compilation
 [submodule "external/glslang"]
 	path = external/glslang
 	url = https://github.com/Gabriele91/glslang-fix/
-	branch = fix/HLSL-Instance-attribute-as-spirv-invocation-attribute
+	branch = fix/macos-compilation
