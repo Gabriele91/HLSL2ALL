@@ -14,6 +14,7 @@
 #include "spirv.hpp"
 #include "spirv_glsl.hpp"
 #include "spirv_hlsl.hpp"
+#include "spirv_msl.hpp"
 #include "spirv_reflect.hpp"
 #include "spirv_cross_util.hpp"
 
@@ -270,6 +271,150 @@ extern bool spirv_to_hlsl
 	}
 	//return
 	return false;
+}
+
+// MSL conversion with embedded reflection comment
+// Reflection format (single header line):
+//   // SQUARE_MTL_REFL entry:NAME textures:N=S[,N=S...] buffers:N=S[,...] members:N=BS:OFF:SZ[,...]
+// textures  → name=slot
+// buffers   → name=slot  (named cbuffers for get_uniform_const_buffer)
+// members   → name=buffer_slot:byte_offset:byte_size  (loose uniforms inside a cbuffer)
+bool spirv_to_msl
+(
+  SpirvShader shader
+, std::string& source_msl
+, ErrorSpirvShaderList& errors
+, const MSLConfig& config
+)
+{
+    SpirvShader spirv_binary = shader;
+    spirv_cross::CompilerMSL msl(std::move(spirv_binary));
+
+    spirv_cross::CompilerMSL::Options msl_opts;
+    msl_opts.platform = config.m_ios
+        ? spirv_cross::CompilerMSL::Options::iOS
+        : spirv_cross::CompilerMSL::Options::macOS;
+    msl_opts.msl_version = static_cast<uint32_t>(config.m_msl_version);
+    // Do NOT set enable_decoration_binding — that would copy SPIR-V binding
+    // indices verbatim into MSL [[buffer(N)]] attributes.  In HLSL/Vulkan
+    // each stage has its own register namespace so two cbuffers in the same
+    // stage can share slot 0 (e.g. Camera:b0 in both VS and PS).  MSL
+    // requires unique indices per argument list, so we let SPIRV-Cross
+    // auto-assign them and read them back via get_automatic_msl_resource_binding().
+    msl.set_msl_options(msl_opts);
+
+    // Common options
+    spirv_cross::CompilerGLSL::Options common_opts = msl.get_common_options();
+    common_opts.vertex.fixup_clipspace = config.m_fixup_clipspace;
+    msl.set_common_options(common_opts);
+
+    // Rename entry points whose names are reserved MSL stage qualifiers or
+    // whose names match the fixed entry-point names used by this project's
+    // HLSL→SPIR-V pipeline (see Shader.cpp shader_target_name[]).
+    // SPIRV-Cross would otherwise emit e.g. "vertex ReturnType vertex(...)"
+    // which the Metal compiler rejects because "vertex" is a keyword.
+    // Reserved MSL qualifiers: vertex, fragment, kernel.
+    // Project entry-point names: vertex, fragment, geometry, tass_control,
+    //                            tass_eval, compute (mapped to "kernel" in MSL).
+    {
+        static const std::string k_msl_reserved[] =
+        {
+            "vertex", "fragment", "kernel",   // MSL stage-qualifier keywords
+            "geometry",                        // not an MSL keyword but unsupported in Metal
+            "tass_control", "tass_eval",       // tessellation stages
+            "compute",                         // our name for the compute stage
+        };
+        auto eps = msl.get_entry_points_and_stages();
+        for (const auto& ep : eps)
+        {
+            for (const auto& kw : k_msl_reserved)
+            {
+                if (ep.name == kw)
+                {
+                    msl.rename_entry_point(ep.name, ep.name + "_main", ep.execution_model);
+                    break;
+                }
+            }
+        }
+    }
+
+    std::string msl_source;
+    try
+    {
+        msl_source = msl.compile();
+    }
+    catch (std::exception& e)
+    {
+        errors.push_back(e.what());
+        return false;
+    }
+
+    // ── Build reflection comment ──────────────────────────────────────────
+    auto active = msl.get_active_interface_variables();
+    spirv_cross::ShaderResources res = msl.get_shader_resources(active);
+
+    // Entry point
+    auto entry_points = msl.get_entry_points_and_stages();
+    std::string entry_name = entry_points.empty() ? "main0" : entry_points[0].name;
+
+    // Collect textures (separate images and combined samplers)
+    std::string tex_part, samp_part, buf_part, mem_part;
+
+    auto append_kv = [](std::string& out, const std::string& name, uint32_t slot)
+    {
+        if (!out.empty()) out += ',';
+        out += name + '=' + std::to_string(slot);
+    };
+
+    for (const auto& r : res.separate_images)
+    {
+        uint32_t slot = msl.get_automatic_msl_resource_binding(r.id);
+        if (slot != uint32_t(-1)) append_kv(tex_part, r.name, slot);
+    }
+    for (const auto& r : res.sampled_images)
+    {
+        uint32_t slot = msl.get_automatic_msl_resource_binding(r.id);
+        if (slot != uint32_t(-1)) append_kv(tex_part, r.name, slot);
+    }
+    for (const auto& r : res.separate_samplers)
+    {
+        uint32_t slot = msl.get_automatic_msl_resource_binding(r.id);
+        if (slot != uint32_t(-1)) append_kv(samp_part, r.name, slot);
+    }
+
+    // Uniform buffers: named cbuffers → buf_part; walk members → mem_part
+    for (const auto& r : res.uniform_buffers)
+    {
+        uint32_t bslot = msl.get_automatic_msl_resource_binding(r.id);
+        if (bslot == uint32_t(-1)) continue;
+        append_kv(buf_part, r.name, bslot);
+
+        // Walk struct members for loose-uniform access
+        const spirv_cross::SPIRType& btype = msl.get_type(r.base_type_id);
+        for (uint32_t mi = 0; mi < btype.member_types.size(); ++mi)
+        {
+            std::string mname = msl.get_member_name(r.base_type_id, mi);
+            if (mname.empty()) continue;
+            uint32_t moffset = msl.type_struct_member_offset(btype, mi);
+            size_t   msize   = msl.get_declared_struct_member_size(btype, mi);
+            if (!mem_part.empty()) mem_part += ',';
+            mem_part += mname + '=' + std::to_string(bslot)
+                      + ':' + std::to_string(moffset)
+                      + ':' + std::to_string(msize);
+        }
+    }
+
+    // Assemble header comment
+    std::string refl = "// SQUARE_MTL_REFL";
+    refl += " entry:" + entry_name;
+    if (!tex_part.empty())  refl += " textures:"  + tex_part;
+    if (!samp_part.empty()) refl += " samplers:"  + samp_part;
+    if (!buf_part.empty())  refl += " buffers:"   + buf_part;
+    if (!mem_part.empty())  refl += " members:"   + mem_part;
+    refl += '\n';
+
+    source_msl = refl + msl_source;
+    return true;
 }
 
 }

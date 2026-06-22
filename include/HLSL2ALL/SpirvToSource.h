@@ -67,6 +67,23 @@ namespace HLSL2ALL
     , ErrorSpirvShaderList& errors
     , const GLSLConfig& config = GLSLConfig()
     );
+    //MSLConfig
+    struct MSLConfig
+    {
+        bool m_ios     { false };
+        bool m_macos   { true  };
+        int  m_msl_version { 20000 }; // 20000 = MSL 2.0
+        bool m_fixup_clipspace { true };
+    };
+    //convert (embeds reflection as a comment at the top of the MSL source)
+    HLSL2ALL_API bool spirv_to_msl
+    (
+      SpirvShader shader
+    , std::string& source_msl
+    , ErrorSpirvShaderList& errors
+    , const MSLConfig& config = MSLConfig()
+    );
+
     //HLSLConfig
     struct HLSLConfig
     {

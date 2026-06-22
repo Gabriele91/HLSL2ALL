@@ -57,7 +57,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/OSDepe
 # SPIRVCROSS
 set(SPIRVCROSS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-Cross")
 add_subdirectory(${SPIRVCROSS_DIR})
-set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util spirv-cross-glsl spirv-cross-hlsl)
+set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${spirv_cross_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SPIRVCROSS_DIR})
