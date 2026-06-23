@@ -137,8 +137,7 @@ extern bool hlsl_to_spirv
 								//debug
 								| EShMsgDebugInfo 
 								//vulkan spirv
-								|  EShMsgVulkanRules
-                                |  EShMsgSpvRules;
+								| (target_info.m_vulkan ? (EShMsgVulkanRules | EShMsgSpvRules) : 0);
     //shaders
     TProgram program;
 	std::vector< int > types;
@@ -332,8 +331,7 @@ extern bool hlsl_to_hlsl_preprocessed
 							//debug
 							| EShMsgDebugInfo 
 							//vulkan spirv
-							|  EShMsgVulkanRules
-                            |  EShMsgSpvRules;
+							| (target_info.m_vulkan ? (EShMsgVulkanRules | EShMsgSpvRules) : 0);
     //shaders
     TProgram program;
 	std::vector< int > types;
