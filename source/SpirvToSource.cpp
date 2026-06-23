@@ -295,6 +295,8 @@ bool spirv_to_msl
         ? spirv_cross::CompilerMSL::Options::iOS
         : spirv_cross::CompilerMSL::Options::macOS;
     msl_opts.msl_version = static_cast<uint32_t>(config.m_msl_version);
+    msl_opts.use_fast_math_pragmas = false;
+    msl_opts.pad_argument_buffer_resources = true;
     // Do NOT set enable_decoration_binding — that would copy SPIR-V binding
     // indices verbatim into MSL [[buffer(N)]] attributes.  In HLSL/Vulkan
     // each stage has its own register namespace so two cbuffers in the same
@@ -305,7 +307,10 @@ bool spirv_to_msl
 
     // Common options
     spirv_cross::CompilerGLSL::Options common_opts = msl.get_common_options();
+    common_opts.force_zero_initialized_variables = true;
     common_opts.vertex.fixup_clipspace = config.m_fixup_clipspace;
+    common_opts.fragment.default_float_precision = spirv_cross::CompilerGLSL::Options::Highp;
+    common_opts.fragment.default_int_precision = spirv_cross::CompilerGLSL::Options::Highp;
     msl.set_common_options(common_opts);
 
     // Rename entry points whose names are reserved MSL stage qualifiers or
@@ -349,6 +354,25 @@ bool spirv_to_msl
         return false;
     }
 
+    // Normalize Metal fast-math intrinsics to their precise/plain equivalents so
+    // the MSL output matches the GLSL/HLSL backends. Recent SPIRV-Cross emits
+    // fast::normalize / fast::min / fast::max / fast::clamp and powr() by default
+    // (the entry point has no SignedZeroInfNanPreserve mode, so it assumes full
+    // fast-math). On Apple GPUs fast:: flushes denormals and has relaxed/UB
+    // behaviour on NaN/Inf, which diverges from OpenGL/DirectX (plain pow/normalize)
+    // and produces artefacts (e.g. PBR lighting blowing out to the light colour).
+    // A targeted string replace keeps the change inside our pipeline.
+    if (1)
+    {
+        auto replace_all_str = [](std::string& s, const std::string& from, const std::string& to)
+        {
+            for (std::string::size_type i = 0; (i = s.find(from, i)) != std::string::npos; i += to.size())
+                s.replace(i, from.size(), to);
+        };
+        replace_all_str(msl_source, "fast::", "");   // fast::normalize -> normalize, fast::max -> max, ...
+        replace_all_str(msl_source, "powr(",  "pow("); // powr requires base>=0 (NaN otherwise) -> use pow
+    }
+
     // ── Build reflection comment ──────────────────────────────────────────
     auto active = msl.get_active_interface_variables();
     spirv_cross::ShaderResources res = msl.get_shader_resources(active);
@@ -388,6 +412,15 @@ bool spirv_to_msl
         uint32_t bslot = msl.get_automatic_msl_resource_binding(r.id);
         if (bslot == uint32_t(-1)) continue;
         append_kv(buf_part, r.name, bslot);
+
+        // Only the implicit globals cbuffer ($Globals -> _Global/_Globals) holds
+        // loose uniforms. Members of *named* cbuffers (Light, Camera, Transform…)
+        // are accessed through the bound constant buffer, never as loose uniforms,
+        // so they must NOT go into the members list — otherwise the Metal backend
+        // folds them into its auto/_Global buffer and can bind that buffer over a
+        // named cbuffer's slot (corrupting e.g. the point-light data → red blow-out).
+        if (r.name.find("Global") == std::string::npos)
+            continue;
 
         // Walk struct members for loose-uniform access
         const spirv_cross::SPIRType& btype = msl.get_type(r.base_type_id);

@@ -35,24 +35,25 @@ endif()
 # GLSLANG
 set(GLSLANG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/glslang")
 
-# FLAGS
-#if(MSVC)
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DENABLE_OPT" )
-#else()
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_OPT" )
-#endif()
+# glslang build options (set before add_subdirectory). The modern glslang needs
+# SPIRV-Tools only for the optimizer; HLSL2ALL doesn't use it → disable ENABLE_OPT.
+set(ENABLE_OPT OFF CACHE BOOL "" FORCE)             # no SPIRV-Tools dependency
+set(ENABLE_HLSL ON  CACHE BOOL "" FORCE)            # we need the HLSL front-end
+set(GLSLANG_TESTS OFF CACHE BOOL "" FORCE)
+set(GLSLANG_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "" FORCE)
+set(BUILD_EXTERNAL OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(${GLSLANG_DIR})
-set(glslang_libraries glslang HLSL OSDependent OGLCompiler SPIRV glslang-default-resource-limits)
+# Modern glslang (>= 2021) merged HLSL and OGLCompiler into the glslang target,
+# so only these targets remain; the rest are pulled in transitively.
+set(glslang_libraries glslang SPIRV glslang-default-resource-limits)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${glslang_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLSLANG_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/Include")
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/Public")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/hlsl")
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/SPIRV")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/OGLCompilersDLL")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/OSDependent")
 
 # SPIRVCROSS
 set(SPIRVCROSS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-Cross")
