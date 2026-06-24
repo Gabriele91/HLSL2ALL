@@ -295,7 +295,7 @@ bool spirv_to_msl
         ? spirv_cross::CompilerMSL::Options::iOS
         : spirv_cross::CompilerMSL::Options::macOS;
     msl_opts.msl_version = static_cast<uint32_t>(config.m_msl_version);
-    msl_opts.use_fast_math_pragmas = false;
+    msl_opts.use_fast_math_pragmas = config.m_optimize_shader;
     msl_opts.pad_argument_buffer_resources = true;
     // Do NOT set enable_decoration_binding — that would copy SPIR-V binding
     // indices verbatim into MSL [[buffer(N)]] attributes.  In HLSL/Vulkan
@@ -307,9 +307,11 @@ bool spirv_to_msl
 
     // Common options
     spirv_cross::CompilerGLSL::Options common_opts = msl.get_common_options();
-    common_opts.force_zero_initialized_variables = true;
     common_opts.vertex.fixup_clipspace = config.m_fixup_clipspace;
-    common_opts.fragment.default_float_precision = spirv_cross::CompilerGLSL::Options::Highp;
+    common_opts.force_zero_initialized_variables = config.m_optimize_shader;
+    common_opts.fragment.default_float_precision = config.m_optimize_shader 
+                                                 ? spirv_cross::CompilerGLSL::Options::Mediump
+                                                 : spirv_cross::CompilerGLSL::Options::Highp;
     common_opts.fragment.default_int_precision = spirv_cross::CompilerGLSL::Options::Highp;
     msl.set_common_options(common_opts);
 
@@ -362,7 +364,7 @@ bool spirv_to_msl
     // behaviour on NaN/Inf, which diverges from OpenGL/DirectX (plain pow/normalize)
     // and produces artefacts (e.g. PBR lighting blowing out to the light colour).
     // A targeted string replace keeps the change inside our pipeline.
-    if (1)
+    /* if (!config.m_optimize_shader) */
     {
         auto replace_all_str = [](std::string& s, const std::string& from, const std::string& to)
         {

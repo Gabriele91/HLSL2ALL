@@ -74,6 +74,7 @@ namespace HLSL2ALL
         bool m_macos   { true  };
         int  m_msl_version { 20000 }; // 20000 = MSL 2.0
         bool m_fixup_clipspace { true };
+        bool m_optimize_shader { true };
     };
     //convert (embeds reflection as a comment at the top of the MSL source)
     HLSL2ALL_API bool spirv_to_msl
