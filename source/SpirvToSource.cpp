@@ -126,6 +126,14 @@ static std::string delete_texture_query_levels(const std::string& in_source)
     return remove_texture_query_levels;
 }
 
+static void force_uniform_buffer_binding_zero(spirv_cross::CompilerGLSL& compiler)
+{
+    auto active = compiler.get_active_interface_variables();
+    auto resources = compiler.get_shader_resources(active);
+    for (const auto& r : resources.uniform_buffers)
+        compiler.set_decoration(r.id, spv::DecorationBinding, 0);
+}
+
 //convert
 extern bool spirv_to_glsl
 (
@@ -194,6 +202,11 @@ extern bool spirv_to_glsl
 			break;
 		}
  	}
+	//force all uniform-buffer bindings to 0 (host re-binds blocks by name)
+	if(config.m_force_uniform_buffer_binding_zero)
+	{
+		force_uniform_buffer_binding_zero(glsl);
+	}
     //compile
 	source_glsl = glsl.compile();
 	//force to add sample uniforms

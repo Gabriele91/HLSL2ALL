@@ -42,6 +42,9 @@ namespace HLSL2ALL
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
         bool m_enable_420pack_extension{ false };
+        //force every uniform-buffer "layout(binding = N)" qualifier to binding = 0
+        //(the host re-binds the blocks by name afterwards)
+        bool m_force_uniform_buffer_binding_zero{ false };
         //remove GL_ARB_texture_query_levels
         bool m_force_to_remove_query_texture{ false };
         //rename texture
