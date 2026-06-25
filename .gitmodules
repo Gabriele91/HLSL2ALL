@@ -1,8 +1,8 @@
 [submodule "external/SPIRV-Cross"]
 	path = external/SPIRV-Cross
-	url = git@github.com:Gabriele91/SPIRV-Cross.git
-	branch = fix/macos-compilation
+	url = https://github.com/Gabriele91/SPIRV-Cross.git
+	branch = square-vulkan-sdk-1.4.341.0
 [submodule "external/glslang"]
 	path = external/glslang
 	url = https://github.com/Gabriele91/glslang-fix/
-	branch = fix/macos-compilation
+	branch = square-vulkan-sdk-1.4.341.0
