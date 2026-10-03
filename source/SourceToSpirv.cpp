@@ -9,6 +9,7 @@
 #define NV_EXTENSIONS
 #define AMD_EXTENSIONS
 #include "HLSL2ALL/SourceToSpirv.h"
+#include "SourceParser.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -166,6 +167,8 @@ extern bool hlsl_to_spirv
     //configure
 	for (auto shader_info : shaders_info)
 	{
+		//no entry point in the source: no parse
+		if (!Parser::source_may_have_function(hlsl_source, shader_info.m_name)) continue;
 		auto shader_type = render_shader_type_to_glslang_type(shader_info.m_type);
 		auto shader = std::make_shared<TShader>(shader_type);
 		shader->setStringsWithLengthsAndNames(sources.data(), lengths.data(), filenames.data(), (int)sources.size());
@@ -360,6 +363,8 @@ extern bool hlsl_to_hlsl_preprocessed
     //configure
 	for (auto shader_info : shaders_info)
 	{
+		//no entry point in the source: no preprocess/parse (when the shaders without it are removed)
+		if (remove_shader_wo_entrypoint && !Parser::source_may_have_function(hlsl_source, shader_info.m_name)) continue;
 		auto shader_type = render_shader_type_to_glslang_type(shader_info.m_type);
         shader = std::make_unique<TShader>(shader_type);
 		shader->setStringsWithLengthsAndNames(sources.data(), lengths.data(), filenames.data(), (int)sources.size());

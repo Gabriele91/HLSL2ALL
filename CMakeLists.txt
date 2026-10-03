@@ -21,8 +21,8 @@ else()
   set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -fPIC -pthread")
 endif()
 # HLSL2ALL
-set(SOURCE_FILES source/SourceToSpirv.cpp source/SpirvToSource.cpp)
-set(HEADER_FILES include/HLSL2ALL/HLSL2ALL.h include/HLSL2ALL/HLSL2ALLConfig.h include/HLSL2ALL/SourceToSpirv.h include/HLSL2ALL/SpirvToSource.h)
+set(SOURCE_FILES source/SourceToSpirv.cpp source/SpirvToSource.cpp source/SourceParser.cpp)
+set(HEADER_FILES include/HLSL2ALL/HLSL2ALL.h include/HLSL2ALL/HLSL2ALLConfig.h include/HLSL2ALL/SourceToSpirv.h include/HLSL2ALL/SpirvToSource.h source/SourceParser.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ) 
 add_definitions(-DHLSL2ALL_LIBRARY_EXPORT)
