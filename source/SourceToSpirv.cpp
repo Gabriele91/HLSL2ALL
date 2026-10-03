@@ -86,12 +86,15 @@ static std::vector<std::string> get_function_list(glslang::TIntermediate* interm
 	return output;
 }
 
-class GLSlangContext
+extern bool initialize()
 {
-public:
-    GLSlangContext()  { glslang::InitializeProcess(); }
-    ~GLSlangContext() { glslang::FinalizeProcess(); }
-};
+    return glslang::InitializeProcess();
+}
+
+extern void shutdown()
+{
+    glslang::FinalizeProcess();
+}
 
 extern bool hlsl_to_spirv
 (
@@ -103,8 +106,6 @@ extern bool hlsl_to_spirv
     , TargetShaderInfo			      target_info
 )
 {
-    //Glslang scope
-    GLSlangContext unique_glslang_context;
     //name shape
     using namespace spv;
     using namespace glslang;
@@ -298,8 +299,6 @@ extern bool hlsl_to_hlsl_preprocessed
     , bool                            remove_shader_wo_entrypoint
 )
 {
-    //Glslang scope
-    GLSlangContext unique_glslang_context;
     //name shape
     using namespace spv;
     using namespace glslang;
