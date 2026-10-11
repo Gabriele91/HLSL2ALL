@@ -207,8 +207,16 @@ extern bool spirv_to_glsl
 	{
 		force_uniform_buffer_binding_zero(glsl);
 	}
-    //compile
-	source_glsl = glsl.compile();
+    //compile (a feature the target has not: an error, not an exception out of here)
+	try
+	{
+		source_glsl = glsl.compile();
+	}
+	catch (const std::exception& e)
+	{
+		errors.push_back(e.what());
+		return false;
+	}
 	//force to add sample uniforms
 	if(config.m_rename_texture_mode == RenameTextureMode::FORCE_TO_ADD_SAMPLE_AS_TEXTURE)
 	{
