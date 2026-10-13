@@ -9,126 +9,22 @@
 #define NV_EXTENSIONS
 #define AMD_EXTENSIONS
 #include "HLSL2ALL/SourceToSpirv.h"
+#include "SourceParser.h"
 #include <string>
 #include <vector>
 #include <memory>
 #include <SPIRV/doc.h>
 #include <SPIRV/disassemble.h>
-#include <SPIRV/SPVRemapper.h>
 #include <SPIRV/GlslangToSpv.h>
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/MachineIndependent/ParseHelper.h>
+#include <glslang/Public/ResourceLimits.h>
 
 namespace HLSL2ALL
 {
-static const TBuiltInResource DefaultTBuiltInResource = {
-    /* .MaxLights = */ 32,
-    /* .MaxClipPlanes = */ 6,
-    /* .MaxTextureUnits = */ 32,
-    /* .MaxTextureCoords = */ 32,
-    /* .MaxVertexAttribs = */ 64,
-    /* .MaxVertexUniformComponents = */ 4096,
-    /* .MaxVaryingFloats = */ 64,
-    /* .MaxVertexTextureImageUnits = */ 32,
-    /* .MaxCombinedTextureImageUnits = */ 80,
-    /* .MaxTextureImageUnits = */ 32,
-    /* .MaxFragmentUniformComponents = */ 4096,
-    /* .MaxDrawBuffers = */ 32,
-    /* .MaxVertexUniformVectors = */ 128,
-    /* .MaxVaryingVectors = */ 8,
-    /* .MaxFragmentUniformVectors = */ 16,
-    /* .MaxVertexOutputVectors = */ 16,
-    /* .MaxFragmentInputVectors = */ 15,
-    /* .MinProgramTexelOffset = */ -8,
-    /* .MaxProgramTexelOffset = */ 7,
-    /* .MaxClipDistances = */ 8,
-    /* .MaxComputeWorkGroupCountX = */ 65535,
-    /* .MaxComputeWorkGroupCountY = */ 65535,
-    /* .MaxComputeWorkGroupCountZ = */ 65535,
-    /* .MaxComputeWorkGroupSizeX = */ 1024,
-    /* .MaxComputeWorkGroupSizeY = */ 1024,
-    /* .MaxComputeWorkGroupSizeZ = */ 64,
-    /* .MaxComputeUniformComponents = */ 1024,
-    /* .MaxComputeTextureImageUnits = */ 16,
-    /* .MaxComputeImageUniforms = */ 8,
-    /* .MaxComputeAtomicCounters = */ 8,
-    /* .MaxComputeAtomicCounterBuffers = */ 1,
-    /* .MaxVaryingComponents = */ 60,
-    /* .MaxVertexOutputComponents = */ 64,
-    /* .MaxGeometryInputComponents = */ 64,
-    /* .MaxGeometryOutputComponents = */ 128,
-    /* .MaxFragmentInputComponents = */ 128,
-    /* .MaxImageUnits = */ 8,
-    /* .MaxCombinedImageUnitsAndFragmentOutputs = */ 8,
-    /* .MaxCombinedShaderOutputResources = */ 8,
-    /* .MaxImageSamples = */ 0,
-    /* .MaxVertexImageUniforms = */ 0,
-    /* .MaxTessControlImageUniforms = */ 0,
-    /* .MaxTessEvaluationImageUniforms = */ 0,
-    /* .MaxGeometryImageUniforms = */ 0,
-    /* .MaxFragmentImageUniforms = */ 8,
-    /* .MaxCombinedImageUniforms = */ 8,
-    /* .MaxGeometryTextureImageUnits = */ 16,
-    /* .MaxGeometryOutputVertices = */ 256,
-    /* .MaxGeometryTotalOutputComponents = */ 1024,
-    /* .MaxGeometryUniformComponents = */ 1024,
-    /* .MaxGeometryVaryingComponents = */ 64,
-    /* .MaxTessControlInputComponents = */ 128,
-    /* .MaxTessControlOutputComponents = */ 128,
-    /* .MaxTessControlTextureImageUnits = */ 16,
-    /* .MaxTessControlUniformComponents = */ 1024,
-    /* .MaxTessControlTotalOutputComponents = */ 4096,
-    /* .MaxTessEvaluationInputComponents = */ 128,
-    /* .MaxTessEvaluationOutputComponents = */ 128,
-    /* .MaxTessEvaluationTextureImageUnits = */ 16,
-    /* .MaxTessEvaluationUniformComponents = */ 1024,
-    /* .MaxTessPatchComponents = */ 120,
-    /* .MaxPatchVertices = */ 32,
-    /* .MaxTessGenLevel = */ 64,
-    /* .MaxViewports = */ 16,
-    /* .MaxVertexAtomicCounters = */ 0,
-    /* .MaxTessControlAtomicCounters = */ 0,
-    /* .MaxTessEvaluationAtomicCounters = */ 0,
-    /* .MaxGeometryAtomicCounters = */ 0,
-    /* .MaxFragmentAtomicCounters = */ 8,
-    /* .MaxCombinedAtomicCounters = */ 8,
-    /* .MaxAtomicCounterBindings = */ 1,
-    /* .MaxVertexAtomicCounterBuffers = */ 0,
-    /* .MaxTessControlAtomicCounterBuffers = */ 0,
-    /* .MaxTessEvaluationAtomicCounterBuffers = */ 0,
-    /* .MaxGeometryAtomicCounterBuffers = */ 0,
-    /* .MaxFragmentAtomicCounterBuffers = */ 1,
-    /* .MaxCombinedAtomicCounterBuffers = */ 1,
-    /* .MaxAtomicCounterBufferSize = */ 16384,
-    /* .MaxTransformFeedbackBuffers = */ 4,
-    /* .MaxTransformFeedbackInterleavedComponents = */ 64,
-    /* .MaxCullDistances = */ 8,
-    /* .MaxCombinedClipAndCullDistances = */ 8,
-    /* .MaxSamples = */ 4,
-    /* .maxMeshOutputVerticesNV = */ 256,
-    /* .maxMeshOutputPrimitivesNV = */ 512,
-    /* .maxMeshWorkGroupSizeX_NV = */ 32,
-    /* .maxMeshWorkGroupSizeY_NV = */ 1,
-    /* .maxMeshWorkGroupSizeZ_NV = */ 1,
-    /* .maxTaskWorkGroupSizeX_NV = */ 32,
-    /* .maxTaskWorkGroupSizeY_NV = */ 1,
-    /* .maxTaskWorkGroupSizeZ_NV = */ 1,
-    /* .maxMeshViewCountNV = */ 4,
-    /* .maxDualSourceDrawBuffersEXT = */ 1,
-
-    /* .limits = */
-    {
-    /* .nonInductiveForLoops = */ 1,
-    /* .whileLoops = */ 1,
-    /* .doWhileLoops = */ 1,
-    /* .generalUniformIndexing = */ 1,
-    /* .generalAttributeMatrixVectorIndexing = */ 1,
-    /* .generalVaryingIndexing = */ 1,
-    /* .generalSamplerIndexing = */ 1,
-    /* .generalVariableIndexing = */ 1,
-    /* .generalConstantMatrixVectorIndexing = */ 1,
-    }
-};
+// glslang now provides the default resource limits; use its builtin instead
+// of the (now layout-incompatible) hand-rolled table.
+#define DefaultTBuiltInResource (*GetDefaultResources())
 }
 
 namespace HLSL2ALL
@@ -191,12 +87,15 @@ static std::vector<std::string> get_function_list(glslang::TIntermediate* interm
 	return output;
 }
 
-class GLSlangContext
+extern bool initialize()
 {
-public:
-    GLSlangContext()  { glslang::InitializeProcess(); }
-    ~GLSlangContext() { glslang::FinalizeProcess(); }
-};
+    return glslang::InitializeProcess();
+}
+
+extern void shutdown()
+{
+    glslang::FinalizeProcess();
+}
 
 extern bool hlsl_to_spirv
 (
@@ -208,8 +107,6 @@ extern bool hlsl_to_spirv
     , TargetShaderInfo			      target_info
 )
 {
-    //Glslang scope
-    GLSlangContext unique_glslang_context;
     //name shape
     using namespace spv;
     using namespace glslang;
@@ -242,8 +139,7 @@ extern bool hlsl_to_spirv
 								//debug
 								| EShMsgDebugInfo 
 								//vulkan spirv
-								|  EShMsgVulkanRules
-                                |  EShMsgSpvRules;
+								| (target_info.m_vulkan ? (EShMsgVulkanRules | EShMsgSpvRules) : 0);
     //shaders
     TProgram program;
 	std::vector< int > types;
@@ -271,6 +167,8 @@ extern bool hlsl_to_spirv
     //configure
 	for (auto shader_info : shaders_info)
 	{
+		//no entry point in the source: no parse
+		if (!Parser::source_may_have_function(hlsl_source, shader_info.m_name)) continue;
 		auto shader_type = render_shader_type_to_glslang_type(shader_info.m_type);
 		auto shader = std::make_shared<TShader>(shader_type);
 		shader->setStringsWithLengthsAndNames(sources.data(), lengths.data(), filenames.data(), (int)sources.size());
@@ -322,6 +220,18 @@ extern bool hlsl_to_spirv
     {
         errors.push_back("Program linking error");
 		errors.push_back({ program.getInfoLog() });
+        return false;
+    }
+    // I/O mapping: actually runs the auto-map binding/location resolver enabled
+    // via setAutoMapBindings/setAutoMapLocations. Without this, every cbuffer
+    // keeps the default binding 0, so they all collide at set 0 / binding 0;
+    // SPIRV-Cross then aliases them onto a single MSL buffer (spvBufferAliasSet0Binding0)
+    // and the reflection loses all but one cbuffer name. mapIO() gives each
+    // resource a distinct binding so SPIRV-Cross emits separate buffers.
+    if (!program.mapIO())
+    {
+        errors.push_back("Program I/O mapping error");
+        errors.push_back({ program.getInfoLog() });
         return false;
     }
 	//alloc
@@ -392,8 +302,6 @@ extern bool hlsl_to_hlsl_preprocessed
     , bool                            remove_shader_wo_entrypoint
 )
 {
-    //Glslang scope
-    GLSlangContext unique_glslang_context;
     //name shape
     using namespace spv;
     using namespace glslang;
@@ -425,8 +333,7 @@ extern bool hlsl_to_hlsl_preprocessed
 							//debug
 							| EShMsgDebugInfo 
 							//vulkan spirv
-							|  EShMsgVulkanRules
-                            |  EShMsgSpvRules;
+							| (target_info.m_vulkan ? (EShMsgVulkanRules | EShMsgSpvRules) : 0);
     //shaders
     TProgram program;
 	std::vector< int > types;
@@ -456,6 +363,8 @@ extern bool hlsl_to_hlsl_preprocessed
     //configure
 	for (auto shader_info : shaders_info)
 	{
+		//no entry point in the source: no preprocess/parse (when the shaders without it are removed)
+		if (remove_shader_wo_entrypoint && !Parser::source_may_have_function(hlsl_source, shader_info.m_name)) continue;
 		auto shader_type = render_shader_type_to_glslang_type(shader_info.m_type);
         shader = std::make_unique<TShader>(shader_type);
 		shader->setStringsWithLengthsAndNames(sources.data(), lengths.data(), filenames.data(), (int)sources.size());

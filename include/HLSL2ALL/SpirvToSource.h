@@ -42,6 +42,9 @@ namespace HLSL2ALL
         bool m_fixup_clipspace{ true };
         bool m_flip_vert_y{ true };
         bool m_enable_420pack_extension{ false };
+        //force every uniform-buffer "layout(binding = N)" qualifier to binding = 0
+        //(the host re-binds the blocks by name afterwards)
+        bool m_force_uniform_buffer_binding_zero{ false };
         //remove GL_ARB_texture_query_levels
         bool m_force_to_remove_query_texture{ false };
         //rename texture
@@ -67,6 +70,24 @@ namespace HLSL2ALL
     , ErrorSpirvShaderList& errors
     , const GLSLConfig& config = GLSLConfig()
     );
+    //MSLConfig
+    struct MSLConfig
+    {
+        bool m_ios     { false };
+        bool m_macos   { true  };
+        int  m_msl_version { 20000 }; // 20000 = MSL 2.0
+        bool m_fixup_clipspace { true };
+        bool m_optimize_shader { true };
+    };
+    //convert (embeds reflection as a comment at the top of the MSL source)
+    HLSL2ALL_API bool spirv_to_msl
+    (
+      SpirvShader shader
+    , std::string& source_msl
+    , ErrorSpirvShaderList& errors
+    , const MSLConfig& config = MSLConfig()
+    );
+
     //HLSLConfig
     struct HLSLConfig
     {

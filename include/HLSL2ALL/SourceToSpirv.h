@@ -10,6 +10,12 @@
 
 namespace HLSL2ALL
 {
+    //the process of glslang for the whole application, before any conversion and after the
+    //last one (counted: a shutdown for each initialize); its built-in symbol tables are made
+    //once, for all the conversions
+    HLSL2ALL_API bool initialize();
+    HLSL2ALL_API void shutdown();
+
     //type of shader
     enum ShaderType
     {

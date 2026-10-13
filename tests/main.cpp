@@ -22,6 +22,7 @@ static inline void replace_all(std::string& source, std::string const& find, std
 int main(int argc, const char * argv[])
 {
     using namespace HLSL2ALL;
+    initialize();
     std::string hlsl_filename("test.hlsl");
     std::string hlsl_source(
 R"HLSL(
@@ -225,5 +226,6 @@ R"HLSL(
         std::cout << glsl_output << std::endl;
     }
     
+    shutdown();
     return 0;
 }

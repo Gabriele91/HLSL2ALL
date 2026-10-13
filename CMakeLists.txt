@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.14...3.31.0)
 project(HLSL2ALL VERSION 0.1.0)
 # C++17
 set (CMAKE_CXX_STANDARD 17)
@@ -11,18 +11,18 @@ if(NOT CMAKE_DEBUG_POSTFIX)
 endif()
 #flags
 if(MSVC)
-  set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
+  set(CMAKE_CXX_FLAGS_RELEASE "/O2 /Ob2 /DNDEBUG /MD")
   set(CMAKE_CXX_FLAGS_DEBUG " /Zi /Od /MDd")
 elseif(APPLE)
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 else()
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fPIC -pthread")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fPIC -pthread")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -fPIC -pthread")
 endif()
 # HLSL2ALL
-set(SOURCE_FILES source/SourceToSpirv.cpp source/SpirvToSource.cpp)
-set(HEADER_FILES include/HLSL2ALL/HLSL2ALL.h include/HLSL2ALL/HLSL2ALLConfig.h include/HLSL2ALL/SourceToSpirv.h include/HLSL2ALL/SpirvToSource.h)
+set(SOURCE_FILES source/SourceToSpirv.cpp source/SpirvToSource.cpp source/SourceParser.cpp)
+set(HEADER_FILES include/HLSL2ALL/HLSL2ALL.h include/HLSL2ALL/HLSL2ALLConfig.h include/HLSL2ALL/SourceToSpirv.h include/HLSL2ALL/SpirvToSource.h source/SourceParser.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ) 
 add_definitions(-DHLSL2ALL_LIBRARY_EXPORT)
@@ -35,29 +35,30 @@ endif()
 # GLSLANG
 set(GLSLANG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/glslang")
 
-# FLAGS
-#if(MSVC)
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DENABLE_OPT" )
-#else()
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_OPT" )
-#endif()
+# glslang build options (set before add_subdirectory). The modern glslang needs
+# SPIRV-Tools only for the optimizer; HLSL2ALL doesn't use it → disable ENABLE_OPT.
+set(ENABLE_OPT OFF CACHE BOOL "" FORCE)             # no SPIRV-Tools dependency
+set(ENABLE_HLSL ON  CACHE BOOL "" FORCE)            # we need the HLSL front-end
+set(GLSLANG_TESTS OFF CACHE BOOL "" FORCE)
+set(GLSLANG_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "" FORCE)
+set(BUILD_EXTERNAL OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(${GLSLANG_DIR})
-set(glslang_libraries glslang HLSL OSDependent OGLCompiler SPIRV glslang-default-resource-limits)
+# Modern glslang (>= 2021) merged HLSL and OGLCompiler into the glslang target,
+# so only these targets remain; the rest are pulled in transitively.
+set(glslang_libraries glslang SPIRV glslang-default-resource-limits)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${glslang_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLSLANG_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/Include")
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/Public")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/hlsl")
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/SPIRV")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/OGLCompilersDLL")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLSLANG_DIR}/glslang/OSDependent")
 
 # SPIRVCROSS
 set(SPIRVCROSS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-Cross")
 add_subdirectory(${SPIRVCROSS_DIR})
-set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util spirv-cross-glsl spirv-cross-hlsl)
+set(spirv_cross_libraries spirv-cross-core spirv-cross-reflect spirv-cross-util spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${spirv_cross_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SPIRVCROSS_DIR})
