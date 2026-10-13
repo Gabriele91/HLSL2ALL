@@ -6,3 +6,9 @@
 	path = external/glslang
 	url = https://github.com/Gabriele91/glslang-fix/
 	branch = square-vulkan-sdk-1.4.341.0
+[submodule "external/SPIRV-Headers"]
+	path = external/SPIRV-Headers
+	url = https://github.com/KhronosGroup/SPIRV-Headers.git
+[submodule "external/SPIRV-Tools"]
+	path = external/SPIRV-Tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools.git

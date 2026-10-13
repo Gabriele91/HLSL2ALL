@@ -35,9 +35,27 @@ endif()
 # GLSLANG
 set(GLSLANG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/glslang")
 
-# glslang build options (set before add_subdirectory). The modern glslang needs
-# SPIRV-Tools only for the optimizer; HLSL2ALL doesn't use it → disable ENABLE_OPT.
-set(ENABLE_OPT OFF CACHE BOOL "" FORCE)             # no SPIRV-Tools dependency
+# SPIRV-Tools (and its SPIRV-Headers): the optimizer of glslang, which "legalizes" the SPIR-V
+# made from HLSL for Vulkan (e.g. no store of textures passed to functions). Only the library
+# (no executables, no tests, no install); its tables are generated with Python 3.
+set(SPIRV_HEADERS_SKIP_EXAMPLES ON CACHE BOOL "" FORCE)
+set(SPIRV_HEADERS_SKIP_INSTALL ON CACHE BOOL "" FORCE)
+set(SPIRV_SKIP_EXECUTABLES ON CACHE BOOL "" FORCE)
+set(SPIRV_SKIP_TESTS ON CACHE BOOL "" FORCE)
+set(SPIRV_WERROR OFF CACHE BOOL "" FORCE)
+set(SKIP_SPIRV_TOOLS_INSTALL ON CACHE BOOL "" FORCE)
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-Headers")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/SPIRV-Tools")
+# built only if linked: glslang needs SPIRV-Tools-opt (and its SPIRV-Tools-static) only
+foreach(spirv_tools_unused SPIRV-Tools-shared SPIRV-Tools-link SPIRV-Tools-lint SPIRV-Tools-diff SPIRV-Tools-reduce SPIRV-Tools-fuzz)
+  if(TARGET ${spirv_tools_unused})
+    set_target_properties(${spirv_tools_unused} PROPERTIES EXCLUDE_FROM_ALL ON)
+  endif()
+endforeach()
+
+# glslang build options (set before add_subdirectory). ENABLE_OPT: glslang links SPIRV-Tools-opt
+# (the target above) and runs it on the SPIR-V the caller asks to optimize
+set(ENABLE_OPT ON CACHE BOOL "" FORCE)              # the optimizer (SPIRV-Tools-opt)
 set(ENABLE_HLSL ON  CACHE BOOL "" FORCE)            # we need the HLSL front-end
 set(GLSLANG_TESTS OFF CACHE BOOL "" FORCE)
 set(GLSLANG_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)

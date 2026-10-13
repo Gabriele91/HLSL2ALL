@@ -64,6 +64,17 @@ namespace HLSL2ALL
         bool  m_reverse_mul{ false };
         bool  m_samplerarray_to_flat{ true };
         bool  m_upgrade_texture_to_samples{ true };
+        //the layout of a driver of Vulkan (with m_vulkan): the resources of all the stages of a
+        //program in one descriptor set (set 0), one binding for each of them, the same in every
+        //stage (by its name: the constant buffers by the name of their block, first, then the
+        //textures and the samplers by the name of their variable), not the registers of glslang;
+        //without the HLSL decorations of glslang (SPV_GOOGLE_hlsl_functionality1, user_type): plain
+        //SPIR-V of Vulkan
+        bool  m_vulkan_layout{ false };
+        //with m_vulkan_layout: the locations of the inputs of the vertex stage by their semantic
+        //("POSITION0", "TEXCOORD1": its index at its end, 0 when it has none); the inputs of a
+        //semantic not here keep their location
+        std::vector< std::pair<std::string, unsigned int> > m_vertex_input_locations;
 	};
     
     //convert
