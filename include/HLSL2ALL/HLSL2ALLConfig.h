@@ -22,3 +22,16 @@
 	// static
 	#define HLSL2ALL_API
 #endif
+// The containers of the interface of HLSL2ALL (its sources, its outputs): the ones of the STL by
+// default; a library may give its own (e.g. with its allocator) by HLSL2ALL_CUSTOM_CONFIGURATION_FILE,
+// a header that defines HLSL2ALL::String and HLSL2ALL::Vector<T> (as std::string, std::vector<T>)
+#ifdef HLSL2ALL_CUSTOM_CONFIGURATION_FILE
+	#include HLSL2ALL_CUSTOM_CONFIGURATION_FILE
+#else
+namespace HLSL2ALL
+{
+	using String = std::string;
+	template < class T >
+	using Vector = std::vector<T>;
+}
+#endif

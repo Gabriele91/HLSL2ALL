@@ -77,16 +77,16 @@ namespace Aux
 	}
 
 	//jump an identifier, true if it is the name
-	static inline bool skip_identifier_is(const char*& pstr, const char* pstr_end, const std::string& name)
+	static inline bool skip_identifier_is(const char*& pstr, const char* pstr_end, std::string_view name)
 	{
 		const char* pstr_start = pstr;
 		while (pstr < pstr_end && is_identifier(*pstr)) ++pstr;
-		return size_t(pstr - pstr_start) == name.size() && std::strncmp(pstr_start, name.c_str(), name.size()) == 0;
+		return size_t(pstr - pstr_start) == name.size() && std::strncmp(pstr_start, name.data(), name.size()) == 0;
 	}
 }
 
 	//see SourceParser.h: a small state machine, comments and directives are skipped
-	bool source_may_have_function(const std::string& source, const std::string& name)
+	bool source_may_have_function(std::string_view source, std::string_view name)
 	{
 		//states of the scan
 		enum SourceState

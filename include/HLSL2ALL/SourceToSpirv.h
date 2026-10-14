@@ -31,30 +31,30 @@ namespace HLSL2ALL
     struct ShaderInfo
     {
         ShaderType  m_type;
-        std::string m_name;
+        String m_name;
     };
     //Spirv
-    using SpirvShader  = std::vector<unsigned int>;
+    using SpirvShader  = Vector<unsigned int>;
 	//Spirv
     struct TypeSpirvShader
     {
         int m_type;
         SpirvShader m_shader;
     };
-	using TypeSpirvShaderList = std::vector< TypeSpirvShader >;
+	using TypeSpirvShaderList = Vector< TypeSpirvShader >;
     //Hlsl
-    using HLSLShader  = std::string;
+    using HLSLShader  = String;
 	//Spirv
     struct TypeHLSLShader
     {
         int m_type;
         HLSLShader m_shader;
     };
-	using TypeHLSLShaderList = std::vector< TypeHLSLShader >;
+	using TypeHLSLShaderList = Vector< TypeHLSLShader >;
 	//errors
-	using ErrorSpirvShaderList = std::vector<std::string>;
+	using ErrorSpirvShaderList = Vector<String>;
 	//errors
-	using InfoSpirvShaderList = std::vector< ShaderInfo >;
+	using InfoSpirvShaderList = Vector< ShaderInfo >;
 	//Target Shader Info
 	struct TargetShaderInfo
 	{
@@ -74,15 +74,15 @@ namespace HLSL2ALL
         //with m_vulkan_layout: the locations of the inputs of the vertex stage by their semantic
         //("POSITION0", "TEXCOORD1": its index at its end, 0 when it has none); the inputs of a
         //semantic not here keep their location
-        std::vector< std::pair<std::string, unsigned int> > m_vertex_input_locations;
+        Vector< std::pair<String, unsigned int> > m_vertex_input_locations;
 	};
     
     //convert
     HLSL2ALL_API bool hlsl_to_spirv
     (
-      const std::string&              hlsl_source
-    , const std::string&              hlsl_filename
-    , const std::vector<ShaderInfo>&  shaders_info
+      const String&              hlsl_source
+    , const String&              hlsl_filename
+    , const Vector<ShaderInfo>&  shaders_info
     , TypeSpirvShaderList&			  shaders_output
     , ErrorSpirvShaderList&			  errors
     , TargetShaderInfo			      target_info = TargetShaderInfo()
@@ -91,9 +91,9 @@ namespace HLSL2ALL
     //convert
     HLSL2ALL_API bool hlsl_to_hlsl_preprocessed
     (
-      const std::string&              hlsl_source
-    , const std::string&              hlsl_filename
-    , const std::vector<ShaderInfo>&  shaders_info
+      const String&              hlsl_source
+    , const String&              hlsl_filename
+    , const Vector<ShaderInfo>&  shaders_info
     , TypeHLSLShaderList&			  shaders_output
     , ErrorSpirvShaderList&			  errors
     , TargetShaderInfo			      target_info = TargetShaderInfo()

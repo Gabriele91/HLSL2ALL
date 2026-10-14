@@ -11,20 +11,20 @@
 namespace HLSL2ALL
 {
     //Spirv
-    using SpirvShader  = std::vector<unsigned int>;
+    using SpirvShader  = Vector<unsigned int>;
     //errors
-    using ErrorSpirvShaderList = std::vector<std::string>;
+    using ErrorSpirvShaderList = Vector<String>;
 	//texture + sampler
 	struct TextureSampler
 	{
-		std::string m_combination;
-		std::string m_texture;
-		std::string m_sampler;
+		String m_combination;
+		String m_texture;
+		String m_sampler;
 		int m_combination_id;
 		int m_texture_id;
 		int m_sampler_id;
 	};
-	using TextureSamplerList = std::vector< TextureSampler >;
+	using TextureSamplerList = Vector< TextureSampler >;
     //rename texture modes
     enum RenameTextureMode
     {
@@ -51,21 +51,21 @@ namespace HLSL2ALL
         RenameTextureMode m_rename_texture_mode{ USE_TEXTURE_NAME };
         //semantic
         bool m_rename_input_with_semantic{ false };
-        std::string m_semantic_prefix{ "in_" };
+        String m_semantic_prefix{ "in_" };
         //rename POSITION in POSITION0
         bool m_rename_position_in_position0{ false };
         //rename input with prefix__location[N]
         bool m_rename_input_with_locations{ false };
-        std::string m_input_prefix{ "" };
+        String m_input_prefix{ "" };
         //rename output with prefix__location[N]
         bool m_rename_output_with_locations{ false };
-        std::string m_output_prefix{ "" };
+        String m_output_prefix{ "" };
     };
     //convert
     HLSL2ALL_API bool spirv_to_glsl
     (
       SpirvShader shader
-    , std::string& source_glsl
+    , String& source_glsl
 	, TextureSamplerList& texture_samplers
     , ErrorSpirvShaderList& errors
     , const GLSLConfig& config = GLSLConfig()
@@ -83,7 +83,7 @@ namespace HLSL2ALL
     HLSL2ALL_API bool spirv_to_msl
     (
       SpirvShader shader
-    , std::string& source_msl
+    , String& source_msl
     , ErrorSpirvShaderList& errors
     , const MSLConfig& config = MSLConfig()
     );
@@ -100,7 +100,7 @@ namespace HLSL2ALL
     HLSL2ALL_API bool spirv_to_hlsl
     (
       SpirvShader shader
-    , std::string& source_hlsl
+    , String& source_hlsl
     , ErrorSpirvShaderList& errors
     , const HLSLConfig& config = HLSLConfig()
     );

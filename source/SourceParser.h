@@ -8,7 +8,7 @@
 //  Scans of the HLSL source before glslang (internal to HLSL2ALL).
 //
 #pragma once
-#include <string>
+#include <string_view>
 
 namespace HLSL2ALL
 {
@@ -19,6 +19,6 @@ namespace Parser
 	//shader). The name is a function when it is followed by '(' in the code (comments and
 	//directives skipped), or when it is in a #define (an entry point made by a macro, e.g.
 	//`#define surface SurfaceOutput fragment`). A false positive only costs that parse.
-	bool source_may_have_function(const std::string& source, const std::string& name);
+	bool source_may_have_function(std::string_view source, std::string_view name);
 }
 }

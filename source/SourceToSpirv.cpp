@@ -363,7 +363,7 @@ namespace VulkanLayout
         std::unordered_map<std::string, unsigned int> locations;
         for (const auto& location : target_info.m_vertex_input_locations)
         {
-            locations[semantic_with_index(location.first)] = location.second;
+            locations[semantic_with_index(std::string(location.first))] = location.second;
         }
         //each stage written again
         for (size_t i = 0; i != shaders.size(); ++i)
@@ -428,9 +428,9 @@ extern void shutdown()
 
 extern bool hlsl_to_spirv
 (
-      const std::string&              hlsl_source
-    , const std::string&              hlsl_filename
-    , const std::vector<ShaderInfo>&  shaders_info
+      const String&                   hlsl_source
+    , const String&                   hlsl_filename
+    , const Vector<ShaderInfo>&       shaders_info
 	, TypeSpirvShaderList&			  shaders_output
 	, ErrorSpirvShaderList&			  errors
     , TargetShaderInfo			      target_info
@@ -533,7 +533,7 @@ extern bool hlsl_to_spirv
 		//test
 		for (std::string& function : get_function_list(shader->getIntermediate()))
 		{
-			if (function == shader_info.m_name)
+			if (function == std::string_view(shader_info.m_name))
 			{
 				//save type
 				types.push_back(shader_info.m_type);
@@ -583,13 +583,13 @@ extern bool hlsl_to_spirv
 			spv_options.disableOptimizer = !target_info.m_vulkan_layout;
 			spv_options.optimizeSize = false;
             // spv_options.validate = true;
-			//shader output
-			SpirvShader output;
+			//shader output (the words of glslang into the ones of the interface)
+			std::vector<unsigned int> output;
 			//get output
 			GlslangToSpv(*program.getIntermediate(shader_type), output, &logger, &spv_options);
 			//build
             shaders_output[i].m_type = types[i];
-            shaders_output[i].m_shader = output;
+            shaders_output[i].m_shader.assign(output.begin(), output.end());
         }
     }
     //the layout of a driver of Vulkan: the bindings of the program, the locations by semantic
@@ -623,7 +623,7 @@ static bool entry_point_is_present
     {
         for (std::string& function : get_function_list(shader.getIntermediate()))
         {
-            if (function == shader_info.m_name)
+            if (function == std::string_view(shader_info.m_name))
             {
                 return true;
             }
@@ -634,9 +634,9 @@ static bool entry_point_is_present
 
 extern bool hlsl_to_hlsl_preprocessed
 (
-      const std::string&              hlsl_source
-    , const std::string&              hlsl_filename
-    , const std::vector<ShaderInfo>&  shaders_info
+      const String&                   hlsl_source
+    , const String&                   hlsl_filename
+    , const Vector<ShaderInfo>&       shaders_info
 	, TypeHLSLShaderList&			  shaders_output
 	, ErrorSpirvShaderList&			  errors
     , TargetShaderInfo			      target_info
@@ -726,8 +726,8 @@ extern bool hlsl_to_hlsl_preprocessed
         //compiler info
         TBuiltInResource resources = DefaultTBuiltInResource;
         TShader::ForbidIncluder includer;
-        // Output
-        HLSLShader output_shader;
+        // Output (the string of glslang, into the one of the interface)
+        std::string output_shader;
         //parse
         if (!shader->preprocess(&resources
             , default_version
@@ -752,7 +752,7 @@ extern bool hlsl_to_hlsl_preprocessed
                     // Add shader
                     shaders_output.emplace_back(TypeHLSLShader{ 
                         glslang_type_to_render_shader_type(shader_type),
-                        std::move(output_shader) 
+                        HLSLShader(output_shader) 
                     });
                 }
             }
@@ -761,7 +761,7 @@ extern bool hlsl_to_hlsl_preprocessed
                 // Add shader
                 shaders_output.emplace_back(TypeHLSLShader{ 
                     glslang_type_to_render_shader_type(shader_type),
-                    std::move(output_shader) 
+                    HLSLShader(output_shader) 
                 });
             }
         }

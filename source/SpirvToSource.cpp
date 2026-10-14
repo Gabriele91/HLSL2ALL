@@ -138,14 +138,14 @@ static void force_uniform_buffer_binding_zero(spirv_cross::CompilerGLSL& compile
 extern bool spirv_to_glsl
 (
   SpirvShader spirv_binary
-, std::string& source_glsl
+, String& source_glsl
 , TextureSamplerList& texture_samplers
 , ErrorSpirvShaderList& errors
 , const GLSLConfig& config
 )
 {
     //init
-    spirv_cross::CompilerGLSL glsl(std::move(spirv_binary));
+    spirv_cross::CompilerGLSL glsl(spirv_binary.data(), spirv_binary.size());
     spirv_cross::CompilerGLSL::Options options;
     options.version = config.m_version;
     options.es = config.m_es;
@@ -157,21 +157,21 @@ extern bool spirv_to_glsl
     //info
     if(config.m_rename_input_with_semantic)
     {
-        replace_input_with_semantic(glsl, config.m_semantic_prefix, config.m_rename_position_in_position0);
+        replace_input_with_semantic(glsl, std::string(config.m_semantic_prefix), config.m_rename_position_in_position0);
     }
 	//replace input
 	if(config.m_rename_input_with_locations)
 	{
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
-		replace_with_location(glsl, config.m_input_prefix, resources.stage_inputs);
+		replace_with_location(glsl, std::string(config.m_input_prefix), resources.stage_inputs);
 	}
 	//replace output
 	if(config.m_rename_output_with_locations)
 	{
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
-		replace_with_location(glsl, config.m_output_prefix, resources.stage_outputs);
+		replace_with_location(glsl, std::string(config.m_output_prefix), resources.stage_outputs);
 	}
 	//combine
 	if(config.m_rename_texture_mode != RenameTextureMode::FORCE_TO_ADD_SAMPLE_AS_TEXTURE)
@@ -222,12 +222,14 @@ extern bool spirv_to_glsl
 	{
     	auto active = glsl.get_active_interface_variables();
     	auto resources = glsl.get_shader_resources(active);
-		add_sample_uniforms(glsl, source_glsl, resources.separate_samplers);
+		std::string source(source_glsl);
+		add_sample_uniforms(glsl, source, resources.separate_samplers);
+		source_glsl = source;
 	}
     //force to remove query texture
     if(config.m_force_to_remove_query_texture)
     {
-        source_glsl = delete_texture_query_levels(source_glsl);
+        source_glsl = delete_texture_query_levels(std::string(source_glsl));
     }
     //return
     return true;
@@ -263,13 +265,13 @@ static void replace_auto_cbuffer_names_with_source_names(spirv_cross::Compiler& 
 extern bool spirv_to_hlsl
 (
   SpirvShader spirv_binary
-, std::string& source_hlsl
+, String& source_hlsl
 , ErrorSpirvShaderList& errors
 , const HLSLConfig& config
 ) 
 {
 	//init
-	spirv_cross::CompilerHLSL hlsl(std::move(spirv_binary));
+	spirv_cross::CompilerHLSL hlsl(spirv_binary.data(), spirv_binary.size());
 	spirv_cross::CompilerHLSL::Options options;
 	options.shader_model = config.m_hlsl_version;
     options.point_coord_compat = config.m_point_coord_compat;
@@ -303,13 +305,13 @@ extern bool spirv_to_hlsl
 bool spirv_to_msl
 (
   SpirvShader shader
-, std::string& source_msl
+, String& source_msl
 , ErrorSpirvShaderList& errors
 , const MSLConfig& config
 )
 {
     SpirvShader spirv_binary = shader;
-    spirv_cross::CompilerMSL msl(std::move(spirv_binary));
+    spirv_cross::CompilerMSL msl(spirv_binary.data(), spirv_binary.size());
 
     spirv_cross::CompilerMSL::Options msl_opts;
     msl_opts.platform = config.m_ios
