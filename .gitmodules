@@ -1,14 +1,14 @@
 [submodule "external/SPIRV-Cross"]
 	path = external/SPIRV-Cross
-	url = https://github.com/Gabriele91/SPIRV-Cross.git
+	url = git@github.com:Gabriele91/SPIRV-Cross.git
 	branch = square-vulkan-sdk-1.4.341.0
 [submodule "external/glslang"]
 	path = external/glslang
-	url = https://github.com/Gabriele91/glslang-fix/
+	url = git@github.com:Gabriele91/glslang-fix.git
 	branch = square-vulkan-sdk-1.4.341.0
 [submodule "external/SPIRV-Headers"]
 	path = external/SPIRV-Headers
-	url = https://github.com/KhronosGroup/SPIRV-Headers.git
+	url = git@github.com:KhronosGroup/SPIRV-Headers.git
 [submodule "external/SPIRV-Tools"]
 	path = external/SPIRV-Tools
-	url = https://github.com/KhronosGroup/SPIRV-Tools.git
+	url = git@github.com:KhronosGroup/SPIRV-Tools.git
